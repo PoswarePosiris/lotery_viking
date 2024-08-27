@@ -3,20 +3,34 @@ package server
 import (
 	"encoding/json"
 	"log"
+	"lotery_viking/internal/server/middleware"
 	"net/http"
 )
 
+const jsonContentType = "application/json"
+
 func (s *Server) RegisterRoutes() http.Handler {
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", s.HelloWorldHandler)
+	router := http.NewServeMux()
+	// public route
+	router.HandleFunc("/", s.HelloWorldHandler)
 
-	mux.HandleFunc("/health", s.healthHandler)
+	// protected route
+	s.addProtectedRoute(router, "/test", s.HelloWorldHandler)
 
-	return mux
+	// Health check
+	router.HandleFunc("/health", s.healthHandler)
+
+	return router
+}
+
+func (s *Server) addProtectedRoute(router *http.ServeMux, path string, handler http.HandlerFunc) {
+	protectedHandler := middleware.CheckAPIKey(handler)
+	router.Handle(path, protectedHandler)
 }
 
 func (s *Server) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", jsonContentType)
 	resp := make(map[string]string)
 	resp["message"] = "Hello World"
 

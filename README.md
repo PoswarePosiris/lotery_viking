@@ -1,6 +1,6 @@
 # Project lotery_viking
 
-One Paragraph of project description goes here
+This project is an API for a lottery system for Viking. This will make the application more scalable and easier to maintain.
 
 ## Getting Started
 

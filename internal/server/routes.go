@@ -1,53 +1,49 @@
 package server
 
 import (
-	"encoding/json"
-	"log"
+	"lotery_viking/internal/handler"
 	"lotery_viking/internal/server/middleware"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 const jsonContentType = "application/json"
 
 func (s *Server) RegisterRoutes() http.Handler {
-
-	router := http.NewServeMux()
+	r := gin.Default()
+	r.Use()
 	// public route
-	router.HandleFunc("/", s.HelloWorldHandler)
+	r.GET("/", s.HelloWorldHandler)
 
 	// protected route
-	s.addProtectedRoute(router, "/test", s.HelloWorldHandler)
+	r.GET("/test", middleware.CheckAPIKey(), s.HelloWorldHandler)
 
 	// Health check
-	router.HandleFunc("/health", s.healthHandler)
+	r.GET("/health", s.healthHandler)
 
-	return router
+	// Group Ticket
+	ticketHandler := handler.NewTicketHandler(s.db)
+	ticketRoutes := r.Group("/tickets")
+	{
+		// middleware
+		ticketRoutes.Use(middleware.CheckAPIKey())
+		ticketRoutes.Use(middleware.CheckKiosk())
+
+		// routes
+		ticketRoutes.POST("/", ticketHandler.CreateTicket)
+	}
+
+	return r
 }
 
-func (s *Server) addProtectedRoute(router *http.ServeMux, path string, handler http.HandlerFunc) {
-	protectedHandler := middleware.CheckAPIKey(handler)
-	router.Handle(path, protectedHandler)
-}
-
-func (s *Server) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", jsonContentType)
+func (s *Server) HelloWorldHandler(c *gin.Context) {
 	resp := make(map[string]string)
 	resp["message"] = "Hello World"
 
-	jsonResp, err := json.Marshal(resp)
-	if err != nil {
-		log.Fatalf("error handling JSON marshal. Err: %v", err)
-	}
-
-	_, _ = w.Write(jsonResp)
+	c.JSON(http.StatusOK, resp)
 }
 
-func (s *Server) healthHandler(w http.ResponseWriter, r *http.Request) {
-	jsonResp, err := json.Marshal(s.db.Health())
-
-	if err != nil {
-		log.Fatalf("error handling JSON marshal. Err: %v", err)
-	}
-
-	_, _ = w.Write(jsonResp)
+func (s *Server) healthHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, s.db.Health())
 }

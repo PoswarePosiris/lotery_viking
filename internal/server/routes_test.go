@@ -1,10 +1,13 @@
 package server
 
 import (
+	"fmt"
 	"lotery_viking/internal"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/gin-gonic/gin"
 )
 
 func TestHandler(t *testing.T) {
@@ -17,7 +20,7 @@ func TestHandler(t *testing.T) {
 	tests := []struct {
 		name       string
 		path       string
-		handler    http.HandlerFunc
+		handler    gin.HandlerFunc
 		expected   string
 		statusCode int
 		headers    map[string]string
@@ -42,10 +45,10 @@ func TestHandler(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			server := httptest.NewServer(http.HandlerFunc(tt.handler))
-			defer server.Close()
+			r := gin.New()
+			r.GET(tt.path, tt.handler)
 
-			req, err := http.NewRequest(http.MethodGet, server.URL+tt.path, nil)
+			req, err := http.NewRequest(http.MethodGet, tt.path, nil)
 			if err != nil {
 				t.Fatalf("error creating request. Err: %v", err)
 			}
@@ -54,16 +57,15 @@ func TestHandler(t *testing.T) {
 				req.Header.Set(key, value)
 			}
 
-			resp, err := http.DefaultClient.Do(req)
-			if err != nil {
-				t.Fatalf("error making request to server. Err: %v", err)
-			}
-			defer resp.Body.Close()
+			res := httptest.NewRecorder()
+			r.ServeHTTP(res, req)
+
+			fmt.Println("Response headers:", res.Header())
 
 			// Assertions
-			internal.AssertStatusCode(t, resp.StatusCode, tt.statusCode)
-			internal.AssertResponseBody(t, resp.Body, tt.expected)
-			internal.AssertContentType(t, resp, jsonContentType)
+			internal.AssertStatusCode(t, res.Code, tt.statusCode)
+			internal.AssertResponseBody(t, res.Body, tt.expected)
+			internal.AssertContentType(t, res, jsonContentType)
 		})
 	}
 }

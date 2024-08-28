@@ -1,43 +1,35 @@
 package middleware_test
 
 import (
-	"io"
 	"lotery_viking/internal"
 	"lotery_viking/internal/server/middleware"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/gin-gonic/gin"
 )
+
+const InvalidKioskID = "{\"error\":\"Invalid Kiosk ID\"}"
 
 func TestCheckKiosk(t *testing.T) {
 	t.Run("valid kiosk ID", func(t *testing.T) {
-		req, err := http.NewRequest(http.MethodGet, "/", nil)
-		if err != nil {
-			t.Fatal(err)
-		}
-		req.Header.Set("Authorization", "Bearer valid-kiosk-id")
-		resp := httptest.NewRecorder()
-		handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			macKiosk := r.Context().Value("macKiosk").(string)
-			if macKiosk != "valid-kiosk-id" {
-				t.Errorf("expected macKiosk to be 'valid-kiosk-id', got '%s'", macKiosk)
-			}
-		})
-		middleware.CheckKiosk(handler).ServeHTTP(resp, req)
-		internal.AssertStatusCode(t, resp.Code, http.StatusOK)
+		g := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(g)
+		c.Request = httptest.NewRequest(http.MethodGet, "/", nil)
+		c.Request.Header.Set("Authorization", "Bearer valid-kiosk-id")
+		middleware.CheckKiosk()(c)
+		internal.AssertStatusCode(t, g.Code, http.StatusOK)
+		macKiosk := c.Request.Context().Value("macKiosk").(string)
+		internal.AssertContextValue(t, macKiosk, "valid-kiosk-id")
 	})
 
 	t.Run("invalid kiosk ID", func(t *testing.T) {
-		req, err := http.NewRequest(http.MethodGet, "/", nil)
-		if err != nil {
-			t.Fatal(err)
-		}
-		resp := httptest.NewRecorder()
-		handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			t.Error("handler should not be called")
-		})
-		middleware.CheckKiosk(handler).ServeHTTP(resp, req)
-		internal.AssertStatusCode(t, resp.Code, http.StatusForbidden)
-		internal.AssertResponseBody(t, io.NopCloser(resp.Body), "Invalid Kiosk ID\n")
+		g := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(g)
+		c.Request = httptest.NewRequest(http.MethodGet, "/", nil)
+		middleware.CheckKiosk()(c)
+		internal.AssertStatusCode(t, g.Code, http.StatusForbidden)
+		internal.AssertResponseBody(t, g.Body, InvalidKioskID)
 	})
 }

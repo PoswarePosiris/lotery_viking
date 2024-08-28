@@ -1,21 +1,22 @@
 package middleware
 
 import (
-	"net/http"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 // CheckAPIKey checks if the request contains a valid API key
-func CheckAPIKey(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		apiKey := r.Header.Get("api-key")
+func CheckAPIKey() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		apiKey := c.GetHeader("api-key")
 		expectedAPIKey := os.Getenv("API_KEY")
 
 		if apiKey != expectedAPIKey {
-			http.Error(w, "Forbidden access", http.StatusForbidden)
+			c.AbortWithStatusJSON(403, gin.H{"error": "Forbidden access"})
 			return
 		}
 
-		next.ServeHTTP(w, r)
-	})
+		c.Next()
+	}
 }

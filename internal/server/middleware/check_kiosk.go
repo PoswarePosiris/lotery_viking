@@ -2,19 +2,21 @@ package middleware
 
 import (
 	"context"
-	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
-func CheckKiosk(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		macKiosk := r.Header.Get("Authorization")
+func CheckKiosk() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		macKiosk := c.GetHeader("Authorization")
 		if macKiosk != "" {
 			macKiosk = strings.TrimPrefix(macKiosk, "Bearer ")
-			ctx := context.WithValue(r.Context(), "macKiosk", macKiosk)
-			next.ServeHTTP(w, r.WithContext(ctx))
+			ctx := context.WithValue(c.Request.Context(), "macKiosk", macKiosk)
+			c.Request = c.Request.WithContext(ctx)
+			c.Next()
 		} else {
-			http.Error(w, "Invalid Kiosk ID", http.StatusForbidden)
+			c.AbortWithStatusJSON(403, gin.H{"error": "Invalid Kiosk ID"})
 		}
-	})
+	}
 }

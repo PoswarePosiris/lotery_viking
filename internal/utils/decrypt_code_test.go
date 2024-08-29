@@ -13,7 +13,7 @@ func TestDecryptCode(t *testing.T) {
 	}{
 		{
 			name:         "valid code",
-			secret:       "^[0-9]{6}$",
+			secret:       "^[0-9]+$",
 			secretLength: 6,
 			code:         "123456",
 			expected:     true,
@@ -64,7 +64,7 @@ func TestDecryptCode(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := decryptCode(tt.secret, tt.secretLength, tt.code)
+			result := DecryptCode(tt.secret, tt.secretLength, tt.code)
 			if result != tt.expected {
 				t.Errorf("Expected %t, but got %t", tt.expected, result)
 			}

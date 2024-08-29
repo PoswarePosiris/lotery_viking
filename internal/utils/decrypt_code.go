@@ -4,7 +4,7 @@ import (
 	"regexp"
 )
 
-func decryptCode(secret string, secretLength int, code string) bool {
+func DecryptCode(secret string, secretLength int, code string) bool {
 	regex, err := regexp.Compile(secret)
 	if err != nil {
 		panic(err)

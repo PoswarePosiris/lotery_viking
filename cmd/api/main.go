@@ -11,7 +11,7 @@ import (
 func main() {
 
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: go run main.go [migrate|drop|seed|seed-clear|serve]")
+		fmt.Println("Usage: go run main.go [migrate|drop|seed|serve]")
 		os.Exit(1)
 	}
 
@@ -29,15 +29,15 @@ func main() {
 		}
 		fmt.Println("Database dropped successfully")
 	case "seed":
-		database.Seed(false)
-		fmt.Println("Database seeding completed successfully")
-	case "seed-clear":
-		database.Seed(true)
+		err := database.Seed()
+		if err != nil {
+			log.Fatal(err)
+		}
 		fmt.Println("Database seeding completed successfully")
 	case "serve":
 		startServer()
 	default:
-		fmt.Println("Usage: go run main.go [migrate|drop|seed|seed-clear|serve]")
+		fmt.Println("Usage: go run main.go [migrate|drop|seed|serve]")
 		os.Exit(1)
 	}
 

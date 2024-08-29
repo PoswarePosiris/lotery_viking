@@ -5,13 +5,15 @@ all: build
 
 build:
 	@echo "Building..."
-	
-	
+
+
 	@go build -o main cmd/api/main.go
+
+	@echo "Build complete"
 
 # Run the application
 run:
-	@go run cmd/api/main.go
+	@go run cmd/api/main.go serve
 
 
 # Create DB container

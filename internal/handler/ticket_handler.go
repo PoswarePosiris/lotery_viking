@@ -30,28 +30,31 @@ func (t *TicketHandler) CreateTicket(c *gin.Context) {
 	macKiosk := c.Request.Context().Value("macKiosk").(string)
 
 	// get the id with the func in base BaseHandler
-	kioskID, err := t.getKioskId(macKiosk)
+	kiosk, err := t.getKiosk(macKiosk)
 	if err != nil {
+		println(err.Error())
 		c.JSON(http.StatusForbidden, gin.H{"error": "Kiosk not found"})
 		return
 	}
-	ticket.KioskID.Id = kioskID
+	c.JSON(http.StatusCreated, kiosk)
+	// ticket.KioskID = kiosk.id
 
-	// if err := t.db.CreateTicket(&ticket); err != nil {
+	// db := t.db.GetDB()
+	// if err := db(&ticket); err != nil {
 	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	// 	return
 	// }
 
-	c.JSON(http.StatusCreated, ticket)
+	// c.JSON(http.StatusCreated, ticket)
 }
 
-func (t *TicketHandler) checkCode(codeTicket string) (bool, error) {
+// func (t *TicketHandler) checkCode(codeTicket string) (bool, error) {
 
-	statement := "SELECT id FROM tickets WHERE code = ?"
-	db := t.db.GetDB()
-	err := db.QueryRow(statement, codeTicket).Scan(&id)
-	if err != nil {
-		return false, err
-	}
-	return true, nil
-}
+// 	statement := "SELECT id FROM tickets WHERE ticket_number = ?"
+// 	db := t.db.GetDB()
+// 	err := db.QueryRow(statement, codeTicket).Scan(&)
+// 	if err != nil {
+// 		return false, err
+// 	}
+// 	return true, nil
+// }

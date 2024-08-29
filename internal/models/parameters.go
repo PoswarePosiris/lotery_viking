@@ -14,6 +14,7 @@ type Parameters struct {
 	DateStart     string  `db:"date_start" json:"date_start"`
 	DateEnd       string  `db:"date_end" json:"date_end"`
 	Status        Status  `db:"status" json:"status"`
+	ClientData    bool    `db:"client_data" json:"client_data"`
 	HomePageId    uint64  `db:"home_page" json:"home_page_id"`
 	HomePage      *Images `json:"home_page,omitempty"`
 	ScanPageId    uint64  `db:"scan_page" json:"scan_page_id"`

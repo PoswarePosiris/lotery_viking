@@ -4,7 +4,32 @@ This project is an API for a lottery system for Viking. This will make the appli
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Based on the Makefile, you can run the following commands to build and run the application.
+
+You need to create a .env file from the .env.example file and fill in the necessary information.
+
+Using the Framework Gin, you need to set the environment variable GIN_MODE=release to run the application in production mode.
+
+```bash
+# .env
+GIN_MODE=release
+```
+In development mode, the application will run with the default configuration.
+
+```bash
+# .env
+GIN_MODE=debug
+```
+
+> **Note:** The application uses a Mysql database, so you need to have a Mysql instance running.
+
+
+### Prerequisites
+
+- Go 1.2X
+- Mysql
+- Docker
+
 
 ## MakeFile
 

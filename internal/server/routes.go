@@ -32,6 +32,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 		// routes
 		ticketRoutes.POST("/", ticketHandler.CreateTicket)
+		ticketRoutes.GET("/:code", ticketHandler.GetTicket)
+		ticketRoutes.GET("/claim/:code", ticketHandler.ClaimTicket)
 	}
 
 	return r

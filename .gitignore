@@ -31,3 +31,4 @@ main
 
 # Remove special file
 .DS_Store
+**/.DS_Store

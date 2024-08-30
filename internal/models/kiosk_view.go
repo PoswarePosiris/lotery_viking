@@ -14,12 +14,12 @@ type KioskView struct {
 	DateEnd             string    `db:"date_end"`
 	Status              string    `db:"status"`
 	ClientData          bool      `db:"client_data"`
-	Publicity           string    `db:"publicity"`
-	HomePage            string    `db:"home_page"`
-	ScanPage            string    `db:"scan_page"`
-	ResultPage          string    `db:"result_page"`
+	Publicity           *string   `db:"publicity"`
+	HomePage            *string   `db:"home_page"`
+	ScanPage            *string   `db:"scan_page"`
+	ResultPage          *string   `db:"result_page"`
 	GeneralRules        string    `db:"general_rules"`
-	SpecificRules       string    `db:"specific_rules"`
+	SpecificRules       *string   `db:"specific_rules"`
 	Secret              string    `db:"secret"`
 	SecretLength        int       `db:"secret_length"`
 	UpdatedAt           time.Time `db:"updated_at"`

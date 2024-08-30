@@ -54,10 +54,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 	{
 		// middleware
 		kioskRoutes.Use(middleware.CheckAPIKey())
-
 		// routes
 		kioskRoutes.GET("/", kioskHandler.GetKiosk)
-		kioskRoutes.GET("/params", kioskHandler.GetKioskByMac)
+		kioskRoutes.Use(middleware.CheckKiosk()).GET("/params", kioskHandler.GetKioskByMac)
 	}
 
 	return r

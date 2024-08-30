@@ -30,6 +30,15 @@ GIN_MODE=debug
 -   Mysql
 -   Docker
 
+### Installing
+
+To install the dependencies, you need to run the following command:
+
+```bash
+go get ./...
+```
+
+
 ## MakeFile
 
 run all make commands with clean tests

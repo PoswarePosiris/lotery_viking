@@ -76,7 +76,11 @@ func (t *TicketHandler) CreateTicket(c *gin.Context) {
 		// TODO add client info is need
 		var statement string
 		if clientData {
-			statement = "INSERT INTO tickets (kiosk_id, ticket_number,client_phone ,entry_scan) VALUES (?, ?,?,  ?)"
+			if !ticket.IsValidClientPhone() {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "Numéro de téléphone invalide"})
+				return
+			}
+			statement = "INSERT INTO tickets (kiosk_id, ticket_number,client_phone ,entry_scan) VALUES (?, ?,?,?)"
 		} else {
 			statement = "INSERT INTO tickets (kiosk_id, ticket_number, entry_scan) VALUES (?, ?, ?)"
 		}

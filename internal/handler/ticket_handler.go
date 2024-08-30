@@ -23,6 +23,7 @@ const (
 	TicketScanned      = "Ticket déjà scanné"
 	TicketCreated      = "Ticket ajouté"
 	TicketClaimMsg     = "Ticket réclamé"
+	KioskNotFound      = "Kiosk non trouvé"
 )
 
 func NewTicketHandler(db database.Service) *TicketHandler {
@@ -48,7 +49,7 @@ func (t *TicketHandler) CreateTicket(c *gin.Context) {
 	// get the id of the kiosk from the context
 	macKiosk, exists := c.Request.Context().Value("macKiosk").(string)
 	if !exists {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Kiosk not found"})
+		c.JSON(http.StatusForbidden, gin.H{"error": KioskNotFound})
 		return
 	}
 
@@ -56,7 +57,7 @@ func (t *TicketHandler) CreateTicket(c *gin.Context) {
 	kiosk, err := t.getKiosk(macKiosk)
 	if err != nil {
 		println(err.Error())
-		c.JSON(http.StatusForbidden, gin.H{"error": "Kiosk not found"})
+		c.JSON(http.StatusForbidden, gin.H{"error": KioskNotFound})
 		return
 	}
 	clientData := kiosk.ClientData
@@ -100,9 +101,13 @@ func (t *TicketHandler) CreateTicket(c *gin.Context) {
 }
 
 func (t *TicketHandler) ClaimTicket(c *gin.Context) {
-	kiosk, err := t.getKiosk(c.Request.Context().Value("macKiosk").(string))
+	macAdress, exists := c.Request.Context().Value("macKiosk").(string)
+	if !exists {
+		c.JSON(http.StatusForbidden, gin.H{"error": KioskNotFound})
+	}
+	kiosk, err := t.getKiosk(macAdress)
 	if err != nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Kiosk not found"})
+		c.JSON(http.StatusForbidden, gin.H{"error": KioskNotFound})
 		return
 	}
 
@@ -149,9 +154,13 @@ func (t *TicketHandler) ClaimTicket(c *gin.Context) {
 }
 
 func (t *TicketHandler) GetTicket(c *gin.Context) {
-	kiosk, err := t.getKiosk(c.Request.Context().Value("macKiosk").(string))
+	macAdress, exists := c.Request.Context().Value("macKiosk").(string)
+	if !exists {
+		c.JSON(http.StatusForbidden, gin.H{"error": KioskNotFound})
+	}
+	kiosk, err := t.getKiosk(macAdress)
 	if err != nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Kiosk not found"})
+		c.JSON(http.StatusForbidden, gin.H{"error": KioskNotFound})
 		return
 	}
 

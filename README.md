@@ -257,7 +257,29 @@ All errors are in the following format:
         200
 
     ```json
-    {}
+    {
+	    "ID": number,
+	     "Name": string,
+	     "MacadressWifi": string,
+	     "MacadressEthernet": string,
+	     "Location": string,
+	     "NameLotery": string,
+	     "NameCasino": string,
+	     "DateStart": string,
+	     "DateEnd": string,
+	     "Status": string [scan, draw],
+	     "ClientData": boolean,
+	     "Publicity": string  (url separate by ,),
+	     "HomePage": string,
+	     "ScanPage": string,
+	     "ResultPage": string,
+	     "GeneralRules": string,
+	     "SpecificRules": string,
+	     "Secret": string (need to be a regex), //"^[0-9]+$"
+	     "SecretLength": number,
+	     "UpdatedAt": string (Timestamp),
+	     "UpdatedAtParameters": string (Timestamp)
+    }
     ```
 
     > Used by the kiosk for init the application.

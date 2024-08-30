@@ -79,23 +79,28 @@ func (t *TicketHandler) CreateTicket(c *gin.Context) {
 		c.JSON(http.StatusConflict, gin.H{"error": TicketAlreadyAdded})
 	} else {
 		// TODO add client info is need
+		db := t.db.GetDB()
+
 		var statement string
+		var args []interface{}
+
 		if clientData {
 			if !ticket.IsValidClientPhone() {
 				c.JSON(http.StatusBadRequest, gin.H{"error": "Numéro de téléphone invalide"})
 				return
 			}
-			statement = "INSERT INTO tickets (kiosk_id, ticket_number,client_phone ,entry_scan) VALUES (?, ?,?,?)"
+			statement = "INSERT INTO tickets (kiosk_id, ticket_number, client_phone, entry_scan) VALUES (?, ?,?,?)"
+			args = []interface{}{ticket.KioskID, ticket.TicketNumber, ticket.ClientPhone, ticket.EntryScan}
 		} else {
 			statement = "INSERT INTO tickets (kiosk_id, ticket_number, entry_scan) VALUES (?, ?, ?)"
+			args = []interface{}{ticket.KioskID, ticket.TicketNumber, ticket.EntryScan}
 		}
-		db := t.db.GetDB()
-		_, err = db.Exec(statement, ticket.KioskID, ticket.TicketNumber, ticket.EntryScan)
+
+		_, err = db.Exec(statement, args...)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-
 		c.JSON(http.StatusCreated, gin.H{"message": TicketCreated})
 	}
 }

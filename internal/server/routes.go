@@ -36,6 +36,30 @@ func (s *Server) RegisterRoutes() http.Handler {
 		ticketRoutes.GET("/claim/:code", ticketHandler.ClaimTicket)
 	}
 
+	// Group Images
+	imageHandler := handler.NewImagesHandler(s.db)
+	imageRoutes := r.Group("/images")
+	{
+		// middleware
+		imageRoutes.Use(middleware.CheckAPIKey())
+
+		// routes
+		imageRoutes.GET("/", imageHandler.GetImages)
+		imageRoutes.GET("/:id", imageHandler.GetImage)
+	}
+
+	// Group Kiosks
+	kioskHandler := handler.NewKioskHandler(s.db)
+	kioskRoutes := r.Group("/kiosks")
+	{
+		// middleware
+		kioskRoutes.Use(middleware.CheckAPIKey())
+
+		// routes
+		kioskRoutes.GET("/", kioskHandler.GetKiosk)
+		kioskRoutes.GET("/params", kioskHandler.GetKioskByMac)
+	}
+
 	return r
 }
 

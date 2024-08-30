@@ -21,7 +21,7 @@ const (
 	TicketAlreadyAdded = "Ticket déjà ajouté"
 	TicketNotFound     = "Ticket non trouvé"
 	TicketScanned      = "Ticket déjà scanné"
-	TicketCreated      = "Ticket créé"
+	TicketCreated      = "Ticket ajouté"
 	TicketClaimMsg     = "Ticket réclamé"
 )
 

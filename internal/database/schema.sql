@@ -3,7 +3,7 @@ CREATE TABLE `images` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `name` varchar(100) DEFAULT NULL,
   `format` varchar(100) DEFAULT NULL,
-  `url` varchar(256) DEFAULT NULL,
+  `url` varchar(256) DEFAULT (''),
   `created_at` timestamp NULL DEFAULT (now()),
   `updated_at` timestamp NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

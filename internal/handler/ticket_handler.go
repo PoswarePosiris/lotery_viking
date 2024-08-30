@@ -46,7 +46,11 @@ func (t *TicketHandler) CreateTicket(c *gin.Context) {
 	}
 
 	// get the id of the kiosk from the context
-	macKiosk := c.Request.Context().Value("macKiosk").(string)
+	macKiosk, exists := c.Request.Context().Value("macKiosk").(string)
+	if !exists {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Kiosk not found"})
+		return
+	}
 
 	// get the id with the func in base BaseHandler
 	kiosk, err := t.getKiosk(macKiosk)

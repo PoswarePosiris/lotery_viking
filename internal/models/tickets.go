@@ -37,3 +37,7 @@ func (t *Tickets) isClaimed() bool {
 func (t *Tickets) IsValid(secret string, secretLength int) bool {
 	return utils.DecryptCode(secret, secretLength, t.TicketNumber)
 }
+
+func (t *Tickets) IsValidClientPhone() bool {
+	return utils.ValidatePhoneNumber(*t.ClientPhone)
+}

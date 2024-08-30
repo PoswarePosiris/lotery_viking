@@ -53,27 +53,13 @@ func (k *KioskHandler) GetKiosk(c *gin.Context) {
 }
 
 func (k *KioskHandler) GetKioskByMac(c *gin.Context) {
-	r := c.Request
-	if r == nil {
-		fmt.Println("Request is nil")
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid mac address"})
-		return
-	}
-	// check if the mac address is in the context
-	ctx := r.Context()
-	if ctx == nil {
-		fmt.Println("Context is nil")
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid mac address"})
-		return
-	}
-
-	mac := ctx.Value("macKiosk").(string)
-	if mac == "" {
+	mac, exists := c.Request.Context().Value("macKiosk").(string)
+	if !exists || mac == "" {
 		fmt.Println("mac is nil")
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid mac address"})
 		return
 	}
-	fmt.Println(mac)
+
 	kiosk, err := k.getKiosk(mac)
 	if err != nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "Kiosk not found"})

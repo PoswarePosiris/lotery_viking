@@ -5,14 +5,25 @@ import (
 	"lotery_viking/internal/server/middleware"
 	"net/http"
 
+	"github.com/gin-contrib/cors"
+
 	"github.com/gin-gonic/gin"
 )
 
 const jsonContentType = "application/json"
 
 func (s *Server) RegisterRoutes() http.Handler {
-	r := gin.Default()
-	r.Use()
+	r := gin.New()
+	r.Use(gin.Recovery())
+
+	// Use the CORS middleware
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"*"}
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}
+	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization", "api-key", "accesscontrolalloworigin"}
+
+	r.Use(cors.New(config))
+
 	// public route
 	r.GET("/", s.HelloWorldHandler)
 

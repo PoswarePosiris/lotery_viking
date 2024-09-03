@@ -11,6 +11,10 @@ build:
 
 	@echo "Build complete"
 
+build-binary:
+	@echo "Building binary..."
+	@echo CGO_ENABLED=0 go build -o main cmd/api/main.go
+	@echo "Binary built successfully"
 # Run the application
 run:
 	@go run cmd/api/main.go serve
@@ -71,4 +75,4 @@ watch:
         fi
 
 
-.PHONY: all build run test clean watch
+.PHONY: all build build-binary run test clean watch

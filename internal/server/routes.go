@@ -4,6 +4,7 @@ import (
 	"lotery_viking/internal/handler"
 	"lotery_viking/internal/server/middleware"
 	"net/http"
+	"path/filepath"
 
 	"github.com/gin-contrib/cors"
 
@@ -69,6 +70,13 @@ func (s *Server) RegisterRoutes() http.Handler {
 		kioskRoutes.GET("/", kioskHandler.GetKiosk)
 		kioskRoutes.Use(middleware.CheckKiosk()).GET("/params", kioskHandler.GetKioskByMac)
 	}
+
+	// Add static folder for images
+	kioskImagesDir, err := filepath.Abs("kiosk_images")
+	if err != nil {
+		panic(err)
+	}
+	r.Static("/kiosk_images", kioskImagesDir)
 
 	return r
 }

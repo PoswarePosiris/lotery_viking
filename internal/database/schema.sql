@@ -2,7 +2,7 @@
 CREATE TABLE `images` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `name` varchar(100),
-  `format` varchar(100) DEFAULT NULL,
+  `format` varchar(100),
   `url` varchar(256) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -34,10 +34,10 @@ CREATE TABLE `parameters` (
 
 CREATE TABLE `kiosks` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  `macadress_wifi` varchar(100) DEFAULT NULL,
-  `macadress_ethernet` varchar(100) DEFAULT NULL,
-  `location` varchar(256) DEFAULT NULL,
+  `name` varchar(100),
+  `macadress_wifi` varchar(100),
+  `macadress_ethernet` varchar(100),
+  `location` varchar(256),
   `id_parameters` bigint unsigned DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -60,7 +60,7 @@ CREATE TABLE `publicity_images` (
 
 CREATE TABLE `rewards` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
+  `name` varchar(100),
   `big_win` tinyint(1) DEFAULT '0',
   `id_images` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -104,6 +104,7 @@ CREATE TABLE `users` (
 CREATE VIEW `kiosk_view` AS
 SELECT
     `kiosks`.`id`,
+    `parameters`.`id` AS `parameters_id`,
     `kiosks`.`name`,
     `kiosks`.`macadress_wifi`,
     `kiosks`.`macadress_ethernet`,
@@ -134,11 +135,12 @@ SELECT
     `rewards`.`id` AS `reward_id`,
     `rewards`.`name` AS `reward_name`,
     `rewards`.`big_win`,
-    `images`.`url` AS `reward_image_url`,
+    `images`.`id` AS `image_id`,
+    `images`.`name` AS `image_name`,
+    `images`.`format` AS `image_format`,
+    `images`.`url` AS `image_url`,
     `kiosks`.`id` AS `kiosk_id`,
-    `kiosks`.`name` AS `kiosk_name`,
-    `parameters`.`id` AS `lottery_id`,
-    `parameters`.`name_lotery` AS `lottery_name`
+    `parameters`.`id` AS `parameter_id`
 FROM
     `tickets`
     LEFT JOIN `kiosks` ON `tickets`.`kiosk_id` = `kiosks`.`id`

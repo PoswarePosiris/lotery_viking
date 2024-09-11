@@ -140,7 +140,7 @@ Security is a priority, so you need to use the _API_KEY_ or the _Mac Address_ of
 
 | Key          | Value            |
 | ------------ | ---------------- |
-| api-key      | 123456           |
+| api-key      | "123456"           |
 | Content-Type | application/json |
 | Accept       | application/json |
 
@@ -177,63 +177,67 @@ All errors are in the following format:
 -   **GET** /test: This endpoint is used to test if you have the correct API_KEY.
 -   **GET** /health: This endpoint is used to check if the application is running.
     -   Response:
+
         200
-    ```json
-    {
-    	"idle": string,
-    	"in_use": string,
-    	"max_idle_closed": string,
-    	"max_lifetime_closed": string,
-    	"message": string,
-    	"open_connections": string,
-    	"status": string,
-    	"wait_count": string,
-    	"wait_duration": string
-    }
-    ```
+	    ```json
+	    {
+	    	"idle": string,
+	    	"in_use": string,
+	    	"max_idle_closed": string,
+	    	"max_lifetime_closed": string,
+	    	"message": string,
+	    	"open_connections": string,
+	    	"status": string,
+	    	"wait_count": string,
+	    	"wait_duration": string
+	    }
+	    ```
 
 ### images
+
+> If the url is empty, the image is in the folder kiosk_images. So it return the full path to the image.
 
 -   **GET** /images: This endpoint is used to get all the images from the database.
 
     -   Response:
-        200
 
-    ```json
-    [
-    	{
-      "id": number,
-      "created_at": string,
-      "updated_at": string,
-      "url": string,
-      "name": string,
-      "format": string
-    },
-    {
-      "id": number,
-      "created_at": string,
-      "updated_at": string,
-      "url": string,
-      "name": string,
-      "format": string
-    },
-    ...
-    ]
-    ```
+        200
+	    ```json
+	    [
+	    	{
+	      "id": number,
+	      "created_at": string,
+	      "updated_at": string,
+	      "url": string,
+	      "name": string,
+	      "format": string
+	    },
+	    {
+	      "id": number,
+	      "created_at": string,
+	      "updated_at": string,
+	      "url": string,
+	      "name": string,
+	      "format": string
+	    },
+	    ...
+	    ]
+	    ```
 
 -   **GET** /images/:id: This endpoint is used to get an image by id.
     -   Response:
+
         200
-    ```json
-    {
-    	"id": number,
-    	"created_at": string,
-    	"updated_at": string,
-    	"url": string,
-    	"name": string,
-    	"format": string
-    }
-    ```
+	    ```json
+	    {
+	    	"id": number,
+	    	"created_at": string,
+	    	"updated_at": string,
+	    	"url": string,
+	    	"name": string,
+	    	"format": string
+	    }
+	    ```
 
 ### kiosks
 
@@ -242,54 +246,55 @@ All errors are in the following format:
     -   Response:
         200
 
-    ```json
-    [
-    {
-      "id": number,
-      "created_at": string,
-      "updated_at": string,
-      "name": string,
-      "macadress_wifi": string,
-      "macadress_ethernet": string,
-      "location": string,
-      "id_parameters": number
-    },
-    ...
-    ]
-    ```
+	    ```json
+	    [
+	    {
+	      "id": number,
+	      "created_at": string,
+	      "updated_at": string,
+	      "name": string,
+	      "macadress_wifi": string,
+	      "macadress_ethernet": string,
+	      "location": string,
+	      "id_parameters": number
+	    },
+	    ...
+	    ]
+	    ```
 
     > Usefull for check all the settings of the kiosk
 
 -   **GET** /kiosks/params: This endpoint is used to get the parameters of the kiosks from the database.
 
     -   Response:
-        200
 
-    ```json
-    {
-	    "ID": number,
-	     "Name": string,
-	     "MacadressWifi": string,
-	     "MacadressEthernet": string,
-	     "Location": string,
-	     "NameLotery": string,
-	     "NameCasino": string,
-	     "DateStart": string,
-	     "DateEnd": string,
-	     "Status": string [scan, draw],
-	     "ClientData": boolean,
-	     "Publicity": string  (url separate by ,) | null,
-	     "HomePage": string | null,
-	     "ScanPage": string | null,
-	     "ResultPage": string | null,
-	     "GeneralRules": string,
-	     "SpecificRules": string | null,
-	     "Secret": string (need to be a regex), //"^[0-9]+$"
-	     "SecretLength": number,
-	     "UpdatedAt": string (Timestamp),
-	     "UpdatedAtParameters": string (Timestamp)
-    }
-    ```
+    	200
+
+	    ```json
+	    {
+		    "ID": number,
+		     "Name": string,
+		     "MacadressWifi": string,
+		     "MacadressEthernet": string,
+		     "Location": string,
+		     "NameLotery": string,
+		     "NameCasino": string,
+		     "DateStart": string,
+		     "DateEnd": string,
+		     "Status": string [scan, draw],
+		     "ClientData": boolean,
+		     "Publicity": string  (url separate by ,) | null,
+		     "HomePage": string | null,
+		     "ClientPage": string | null,
+		     "ResultPage": string | null,
+		     "GeneralRules": string,
+		     "SpecificRules": string | null,
+		     "Secret": string (need to be a regex), //"^[0-9]+$"
+		     "SecretLength": number,
+		     "UpdatedAt": string (Timestamp),
+		     "UpdatedAtParameters": string (Timestamp)
+	    }
+	    ```
 
     > Used by the kiosk for init the application.
 
@@ -308,55 +313,59 @@ All errors are in the following format:
         ```
 
         - Response:
-        201
-        ```json
-        {
-        	"message": "Ticket ajouté"
-        }
-        ```
 
-        409
-        ```json
-		{
-			"error": "Ticket déjà scanné"
-		}
-		```
+	        201
+	        ```json
+	        {
+	        	"message": "Ticket ajouté"
+	        }
+	        ```
 
-		400
-		```json
-		{
-			"error": "Code non valide"
-		}
-		```
+	        409
+	        ```json
+			{
+				"error": "Ticket déjà scanné"
+			}
+			```
+
+			400
+			```json
+			{
+				"error": "Code non valide"
+			}
+			```
 
 -   **GET** /tickets/:code: This endpoint is used to get a ticket by code with all the informations.
 
 	-   Response:
+
 		200
-	```json
+		```json
 		{
-	  "id": number,
-	  "kiosk_id": number,
-	  "id_reward": number | null,
-	  "ticket_number": string,
-	  "client_phone": string | null,
-	  "claim": boolean,
-	  "entry_scan": string (Timestamp),
-	  "exit_scan": string (Timestamp) | null,
-	  "reward_name": string | null,
-	  "big_win": boolean | null,
-	  "reward_image": string | null,
+		  "id": number,
+		  "kiosk_id": number,
+		  "id_reward": number | null,
+		  "ticket_number": string,
+		  "client_phone": string | null,
+		  "claim": boolean,
+		  "entry_scan": string (Timestamp),
+		  "exit_scan": string (Timestamp) | null,
+		  "reward_name": string | null,
+		  "big_win": boolean | null,
+		  "reward_image": string | null,
 		}
-	```
+		```
+
 - **GET** /tickets/claim/:code: This endpoint is used to claim a ticket by code.
 
 	-   Response:
+
 		200
-	```json
+		```json
 		{
-			"message": "Ticket réclamé"
+				"message": "Ticket réclamé"
 		}
-	```
+		```
 
 		409
 		```json

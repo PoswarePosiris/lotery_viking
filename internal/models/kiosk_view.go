@@ -4,6 +4,7 @@ import "time"
 
 type KioskView struct {
 	ID                  uint64    `db:"id" json:"id"`
+	ParametersID        uint64    `db:"parameters_id" json:"parameters_id"`
 	Name                string    `db:"name" json:"name"`
 	MacadressWifi       string    `db:"macadress_wifi" json:"macadress_wifi"`
 	MacadressEthernet   string    `db:"macadress_ethernet" json:"macadress_ethernet"`
@@ -14,7 +15,7 @@ type KioskView struct {
 	DateEnd             string    `db:"date_end" json:"date_end"`
 	Status              string    `db:"status" json:"status"`
 	ClientData          bool      `db:"client_data" json:"client_data"`
-	Publicity           *string   `db:"publicity" json:"publicity"`
+	Publicity           *[]Images `db:"publicity" json:"publicity"`
 	HomePageId          *uint64   `db:"home_page" json:"-"`
 	HomePage            *Images   `json:"home_page"`
 	ClientPageId        *uint64   `db:"client_page" json:"-"`

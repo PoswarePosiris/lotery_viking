@@ -1,10 +1,11 @@
 package handler
 
 import (
+	"database/sql"
+	"log"
 	"lotery_viking/internal/database"
 	"lotery_viking/internal/models"
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,10 +35,19 @@ func (i *ImagesHandler) GetImages(c *gin.Context) {
 
 	for rows.Next() {
 		var image models.Images
-		err := rows.Scan(&image.ID, &image.Name, &image.Format, &image.Url, &image.CreatedAt, &image.UpdatedAt)
+		var url sql.NullString
+		err = rows.Scan(&image.ID, &image.Name, &image.Format, &url, &image.CreatedAt, &image.UpdatedAt)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
+		}
+		if url.Valid {
+			image.Url = &url.String
+		} else {
+			// Use getPathImage to construct the URL
+			fullPath := i.GetPathImage(image.Name, image.Format)
+			log.Println(fullPath)
+			image.Url = &fullPath
 		}
 		images = append(images, image)
 	}
@@ -55,27 +65,22 @@ func (i *ImagesHandler) GetImage(c *gin.Context) {
 	id := c.Param("id")
 
 	var image models.Images
+	var url sql.NullString
 
 	db := i.db.GetDB()
-	err := db.QueryRow("SELECT id , name, format , url, created_at, updated_at FROM images WHERE id = ?", id).Scan(&image.ID, &image.Name, &image.Format, &image.Url, &image.CreatedAt, &image.UpdatedAt)
+	err := db.QueryRow("SELECT id , name, format , url, created_at, updated_at FROM images WHERE id = ?", id).Scan(&image.ID, &image.Name, &image.Format, &url, &image.CreatedAt, &image.UpdatedAt)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	if url.Valid {
+		image.Url = &url.String
+	} else {
+		// Use getPathImage to construct the URL
+		fullPath := i.GetPathImage(image.Name, image.Format)
+		log.Println(fullPath)
+		image.Url = &fullPath
+	}
 
 	c.JSON(http.StatusOK, image)
-}
-
-func (i *ImagesHandler) getPath() string {
-	basePath := os.Getenv("HOST")
-	port := os.Getenv("PORT")
-
-	if basePath == "" {
-		basePath = "localhost"
-	}
-	if port == "" {
-		port = "8080"
-	}
-
-	return basePath + ":" + port + "/kiosk_images/"
 }

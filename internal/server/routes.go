@@ -71,6 +71,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 		// routes
 		kioskRoutes.GET("/", kioskHandler.GetKiosk)
 		kioskRoutes.Use(middleware.CheckKiosk()).GET("/params", kioskHandler.GetKioskByMac)
+		kioskRoutes.Use(middleware.CheckKiosk()).GET("/rewards", kioskHandler.GetKioskRewards)
 	}
 
 	// Add static folder for images

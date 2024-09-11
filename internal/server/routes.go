@@ -16,6 +16,8 @@ const jsonContentType = "application/json"
 func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.New()
 	r.Use(gin.Recovery())
+	// might remove it in production
+	r.Use(gin.Logger())
 
 	// Use the CORS middleware
 	config := cors.DefaultConfig()

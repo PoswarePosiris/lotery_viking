@@ -2,14 +2,14 @@ package models
 
 type Images struct {
 	BaseModel
-	Url    string `db:"url" json:"url"`
-	Name   string `db:"name" json:"name"`
-	Format string `db:"format" json:"format"`
-	Data   []byte `json:"-"`
+	Url    *string `db:"url" json:"url"`
+	Name   string  `db:"name" json:"name"`
+	Format string  `db:"format" json:"format"`
+	Data   []byte  `json:"-"`
 }
 
 // GetUrl returns the model url. full path
-func (m *Images) GetUrl() string {
+func (m *Images) GetUrl() *string {
 	return m.Url
 }
 

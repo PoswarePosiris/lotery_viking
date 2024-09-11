@@ -17,8 +17,8 @@ type Parameters struct {
 	ClientData    bool    `db:"client_data" json:"client_data"`
 	HomePageId    uint64  `db:"home_page" json:"home_page_id"`
 	HomePage      *Images `json:"home_page,omitempty"`
-	ScanPageId    uint64  `db:"scan_page" json:"scan_page_id"`
-	ScanPage      *Images `json:"scan_page,omitempty"`
+	ClientPageId  uint64  `db:"client_page" json:"client_page_id"`
+	ClientPage    *Images `json:"client_page,omitempty"`
 	ResultPageId  uint64  `db:"result_page" json:"result_page_id"`
 	ResultPage    *Images `json:"result_page,omitempty"`
 	GeneralRules  string  `db:"general_rules" json:"general_rules"`

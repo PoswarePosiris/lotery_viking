@@ -3,8 +3,8 @@ testdata_dir = "testdata"
 tmp_dir = "tmp"
 
 [build]
-  args_bin = []
-  bin = "./main serve"
+  args_bin = ["serve"]
+  bin = "./main"
   cmd = "make build"
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "testdata"]

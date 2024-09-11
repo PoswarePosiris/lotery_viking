@@ -10,11 +10,11 @@ func Seed() error {
 	defer db.Close()
 
 	dataImages := []models.Images{
-		{BaseModel: models.BaseModel{ID: 1}, Name: "Image 1", Url: "https://picsum.photos/id/10/200/300", Format: "jpg"},
-		{BaseModel: models.BaseModel{ID: 2}, Name: "Image 2", Url: "https://picsum.photos/id/25/200/300", Format: "png"},
-		{BaseModel: models.BaseModel{ID: 3}, Name: "Image 3", Url: "https://picsum.photos/id/50/200/300", Format: "jpg"},
-		{BaseModel: models.BaseModel{ID: 4}, Name: "Image 4 pub", Url: "https://picsum.photos/100/1/200/300", Format: "png"},
-		{BaseModel: models.BaseModel{ID: 5}, Name: "Image 5 pub", Url: "https://picsum.photos/125/1/200/300", Format: "jpg"},
+		{BaseModel: models.BaseModel{ID: 1}, Name: "Image 1", Url: stringPtr("https://picsum.photos/id/10/200/300"), Format: "jpg"},
+		{BaseModel: models.BaseModel{ID: 2}, Name: "Image 2", Url: stringPtr("https://picsum.photos/id/25/200/300"), Format: "png"},
+		{BaseModel: models.BaseModel{ID: 3}, Name: "Image 3", Url: stringPtr("https://picsum.photos/id/50/200/300"), Format: "jpg"},
+		{BaseModel: models.BaseModel{ID: 4}, Name: "Image 4 pub", Url: stringPtr("https://picsum.photos/100/1/200/300"), Format: "png"},
+		{BaseModel: models.BaseModel{ID: 5}, Name: "Image 5 pub", Url: nil, Format: "jpg"},
 	}
 
 	stmtImage, err := db.Prepare("INSERT INTO images (id, name, url, format) VALUES (?, ?, ?, ?)")
@@ -43,19 +43,19 @@ func Seed() error {
 			Secret:        "^[0-9]+$",
 			SecretLength:  10,
 			HomePageId:    1,
-			ScanPageId:    2,
+			ClientPageId:  2,
 			ResultPageId:  3,
 		},
 	}
 
-	stmtParam, err := db.Prepare("INSERT INTO parameters (id, name_lotery, name_casino,  date_start, date_end, status, general_rules, specific_rules, secret, secret_length, home_page, scan_page, result_page) VALUES (?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	stmtParam, err := db.Prepare("INSERT INTO parameters (id, name_lotery, name_casino,  date_start, date_end, status, general_rules, specific_rules, secret, secret_length, home_page, client_page, result_page) VALUES (?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
 	defer stmtParam.Close()
 
 	for _, parameters := range dataParameters {
-		_, err = stmtParam.Exec(parameters.ID, parameters.NameLotery, parameters.NameCasino, parameters.DateStart, parameters.DateEnd, parameters.Status, parameters.GeneralRules, parameters.SpecificRules, parameters.Secret, parameters.SecretLength, parameters.HomePageId, parameters.ScanPageId, parameters.ResultPageId)
+		_, err = stmtParam.Exec(parameters.ID, parameters.NameLotery, parameters.NameCasino, parameters.DateStart, parameters.DateEnd, parameters.Status, parameters.GeneralRules, parameters.SpecificRules, parameters.Secret, parameters.SecretLength, parameters.HomePageId, parameters.ClientPageId, parameters.ResultPageId)
 		if err != nil {
 			return err
 		}
@@ -92,22 +92,6 @@ func Seed() error {
 			Location:          "Rouen",
 			MacadressWifi:     "7C:0A:3F:F5:2A:CA",
 			MacadressEthernet: "D8:A3:5C:E6:97:6A",
-			IdParameters:      1,
-		},
-		{
-			BaseModel:         models.BaseModel{ID: 2},
-			Name:              "Kiosk 1 Sanary",
-			Location:          "Sanary sur Mer",
-			MacadressWifi:     "7C:0A:3F:A3:1B:90",
-			MacadressEthernet: "C0:23:8D:A1:7B:6E",
-			IdParameters:      1,
-		},
-		{
-			BaseModel:         models.BaseModel{ID: 3},
-			Name:              "Kiosk 2 Sanary",
-			Location:          "Sanary sur Mer",
-			MacadressWifi:     "D8:A3:5C:E6:97:46",
-			MacadressEthernet: "7C:0A:3F:F5:2F:EC",
 			IdParameters:      1,
 		},
 	}
@@ -204,6 +188,10 @@ func Seed() error {
 	}
 
 	return nil
+}
+
+func stringPtr(s string) *string {
+	return &s
 }
 
 func newUint64(value uint64) *uint64 {

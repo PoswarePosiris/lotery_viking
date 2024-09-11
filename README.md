@@ -271,32 +271,56 @@ All errors are in the following format:
     	200
 
 	    ```json
-	    {
-		    "ID": number,
-		     "Name": string,
-		     "MacadressWifi": string,
-		     "MacadressEthernet": string,
-		     "Location": string,
-		     "NameLotery": string,
-		     "NameCasino": string,
-		     "DateStart": string,
-		     "DateEnd": string,
-		     "Status": string [scan, draw],
-		     "ClientData": boolean,
-		     "Publicity": string  (url separate by ,) | null,
-		     "HomePage": string | null,
-		     "ClientPage": string | null,
-		     "ResultPage": string | null,
-		     "GeneralRules": string,
-		     "SpecificRules": string | null,
-		     "Secret": string (need to be a regex), //"^[0-9]+$"
-		     "SecretLength": number,
-		     "UpdatedAt": string (Timestamp),
-		     "UpdatedAtParameters": string (Timestamp)
-	    }
+		{
+			"id": number,
+			"name": string,
+			"macadress_wifi": string,
+			"macadress_ethernet": string,
+			"location": string,
+			"name_lotery": string,
+			"name_casino": string,
+			"date_start": string,
+			"date_end": string,
+			"status": string [scan, draw],
+			"client_data": boolean,
+			"publicity": Image[] | null,
+			"home_page": Image | null,
+			"client_page": Image | null,
+			"result_page": Image | null,
+			"general_rules": string,
+			"specific_rules": string | null,
+			"secret": string (need to be a regex), //"^[0-9]+$"
+			"secret_length": number,
+			"updated_at": string (Timestamp),
+			"updated_at_parameters": string (Timestamp)
+		}
 	    ```
 
     > Used by the kiosk for init the application.
+
+-   **GET** /kiosks/rewards: This endpoint is used to get the images rewards for the loterie and kiosk from the database.
+
+    -   Response:
+
+    	200
+
+	    ```json
+		[
+			{
+			    "reward_id": number,
+			    "reward_name": string,
+			    "big_win": boolean,
+			    "image_id": number | null,
+			    "image_name": string | null,
+			    "image_format": string | null,
+			    "image_url": string | null
+			},
+			...
+		]
+	    ```
+
+    > Used by the kiosk for init the application.
+    If the image_id is null it skip the image.
 
 ### tickets
 
@@ -380,3 +404,120 @@ All errors are in the following format:
 			"error": "Code non valide"
 		}
 		```
+
+## Model
+
+### Images
+
+```json
+{
+	"id": number,
+	"created_at": string (optional),
+	"updated_at": string (optional),
+	"url": string,
+	"name": string,
+	"format": string
+}
+```
+
+### Kiosks
+
+```json
+{
+	"id": number,
+	"created_at": string (optional),
+	"updated_at": string (optional),
+	"name": string,
+	"macadress_wifi": string,
+	"macadress_ethernet": string,
+	"location": string,
+	"id_parameters": number
+}
+```
+
+### Tickets
+
+```json
+{
+	"id": number,
+	"kiosk_id": number,
+	"id_reward": number | null,
+	"ticket_number": string,
+	"client_phone": string | null,
+	"claim": boolean,
+	"entry_scan": string (Timestamp),
+	"exit_scan": string (Timestamp) | null,
+	"reward_name": string | null,
+	"big_win": boolean | null,
+	"reward_image": string | null,
+}
+```
+
+### Parameters
+
+```json
+{
+	"id": number,
+	"name_lotery": string,
+	"name_casino": string,
+	"date_start": string,
+	"date_end": string,
+	"status": string [scan, draw],
+	"client_data": boolean,
+	"publicity": Image[] | null,
+	"home_page": Image | null,
+	"client_page": Image | null,
+	"result_page": Image | null,
+	"general_rules": string,
+	"specific_rules": string | null,
+	"secret": string (need to be a regex), //"^[0-9]+$"
+	"secret_length": number,
+	"created_at": string (Timestamp), // "2021-06-01 00:00:00
+	"updated_at": string (Timestamp)
+}
+```
+
+### KioskView
+
+```json
+{
+	"id": number,
+	"name": string,
+	"macadress_wifi": string,
+	"macadress_ethernet": string,
+	"location": string,
+	"name_lotery": string,
+	"name_casino": string,
+	"date_start": string,
+	"date_end": string,
+	"status": string [scan, draw],
+	"client_data": boolean,
+	"publicity": Image[] | null,
+	"home_page": Image | null,
+	"client_page": Image | null,
+	"result_page": Image | null,
+	"general_rules": string,
+	"specific_rules": string | null,
+	"secret": string (need to be a regex), //"^[0-9]+$"
+	"secret_length": number,
+	"updated_at": string (Timestamp),
+	"updated_at_parameters": string (Timestamp)
+}
+```
+
+### RewardView
+
+```json
+[
+	{
+	    "reward_id": number,
+	    "reward_name": string,
+	    "big_win": boolean,
+	    "image_id": number | null,
+	    "image_name": string | null,
+	    "image_format": string | null,
+	    "image_url": string | null
+	},
+	...
+]
+```

@@ -22,7 +22,7 @@ type Service interface {
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
 	Close() error
-	// GetKioskId(macAdress string) (int, error)
+	// getKioskViewId(macAdress string) (int, error)
 
 	// Return the db
 	GetDB() *sql.DB

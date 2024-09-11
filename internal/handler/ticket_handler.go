@@ -54,7 +54,7 @@ func (t *TicketHandler) CreateTicket(c *gin.Context) {
 	}
 
 	// get the id with the func in base BaseHandler
-	kiosk, err := t.getKiosk(macKiosk)
+	kiosk, err := t.getKioskView(macKiosk)
 	if err != nil {
 		println(err.Error())
 		c.JSON(http.StatusForbidden, gin.H{"error": KioskNotFound})
@@ -110,7 +110,7 @@ func (t *TicketHandler) ClaimTicket(c *gin.Context) {
 	if !exists {
 		c.JSON(http.StatusForbidden, gin.H{"error": KioskNotFound})
 	}
-	kiosk, err := t.getKiosk(macAdress)
+	kiosk, err := t.getKioskView(macAdress)
 	if err != nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": KioskNotFound})
 		return
@@ -163,7 +163,7 @@ func (t *TicketHandler) GetTicket(c *gin.Context) {
 	if !exists {
 		c.JSON(http.StatusForbidden, gin.H{"error": KioskNotFound})
 	}
-	kiosk, err := t.getKiosk(macAdress)
+	kiosk, err := t.getKioskView(macAdress)
 	if err != nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": KioskNotFound})
 		return

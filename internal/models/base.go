@@ -10,13 +10,13 @@ type Model interface {
 }
 
 type BaseModel struct {
-	ID        int        `db:"id" json:"id"`
+	ID        uint64     `db:"id" json:"id"`
 	CreatedAt *time.Time `db:"created_at" json:"created_at,omitempty"`
 	UpdatedAt *time.Time `db:"updated_at" json:"updated_at,omitempty"`
 }
 
 // GetId returns the model id.
-func (m *BaseModel) GetID() int {
+func (m *BaseModel) GetID() uint64 {
 	return m.ID
 }
 

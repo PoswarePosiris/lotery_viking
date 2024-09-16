@@ -80,22 +80,17 @@ func (b *BaseHandler) getKioskView(macAddress string) (*models.KioskView, error)
 }
 
 func (b *BaseHandler) GetPathImage(name string, format string) string {
-	haveSSL := os.Getenv("HTTP")
-	basePath := os.Getenv("HOST")
+	apiUrl := os.Getenv("API_URL")
 	port := os.Getenv("PORT")
 
-	if haveSSL == "" {
-		haveSSL = "http"
-	}
-
-	if basePath == "" {
-		basePath = "localhost"
-	}
 	if port == "" {
 		port = "8080"
 	}
+	if apiUrl == "" {
+		apiUrl = "http://localhost:" + port
+	}
 
-	return fmt.Sprintf("%s://%s:%s/kiosk_images/%s.%s", haveSSL, basePath, port, name, format)
+	return fmt.Sprintf("%s/kiosk_images/%s.%s", apiUrl, name, format)
 }
 
 func (b *BaseHandler) getImagesFromList(list []uint64) (map[uint64]models.Images, error) {

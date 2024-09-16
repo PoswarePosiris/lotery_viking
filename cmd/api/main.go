@@ -53,19 +53,18 @@ func main() {
 func startServer() {
 	server := server.NewServer()
 
-	// Get the host and port
-	host := os.Getenv("HOST")
-	if host == "" {
-		host = "localhost" // Default to localhost if HOST is not set
-	}
-
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080" // Default to port 8080 if PORT is not set
 	}
+	// Get the host and port
+	apiUrl := os.Getenv("API_URL")
+	if apiUrl == "" {
+		apiUrl = "http://localhost:" + port // Default to localhost if HOST is not set
+	}
 
 	// Print the full URL before starting the server
-	fmt.Printf("Server starting at http://%s:%s\n", host, port)
+	fmt.Printf("Server starting at %s\n", apiUrl)
 
 	err := server.ListenAndServe()
 	if err != nil {
@@ -84,7 +83,7 @@ func initialize() error {
 	envFile := filepath.Join(baseDir, ".env")
 	if _, err := os.Stat(envFile); os.IsNotExist(err) {
 		// Create the .env file. With this
-		content := []byte("HTTP=http # http or https\nHOST=localhost\nPORT=8080\nAPP_ENV=local\nAPI_KEY=\n\nGIN_MODE=release # debug, test, release\n\nDB_HOST=localhost\nDB_PORT=\nDB_DATABASE=\nDB_USERNAME=\nDB_PASSWORD=\nDB_ROOT_PASSWORD=\n")
+		content := []byte("API_URL=http://localhost:8080\nPORT=8080\nAPP_ENV=local\nAPI_KEY=\n\nGIN_MODE=release # debug, test, release\n\nDB_HOST=localhost\nDB_PORT=\nDB_DATABASE=\nDB_USERNAME=\nDB_PASSWORD=\nDB_ROOT_PASSWORD=\n")
 		err := os.WriteFile(envFile, content, 0644) // Permissions: rw-r--r--
 		if err != nil {
 			return fmt.Errorf("failed to create .env file: %w", err)

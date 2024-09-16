@@ -170,7 +170,6 @@ func (t *TicketHandler) GetTicket(c *gin.Context) {
 	}
 
 	code := c.Param("code")
-	fmt.Println(code)
 	codeIsValid := utils.DecryptCode(kiosk.Secret, kiosk.SecretLength, code)
 	if !codeIsValid {
 		c.JSON(http.StatusBadRequest, gin.H{"error": CodeInvalid})
@@ -191,10 +190,9 @@ func (t *TicketHandler) getTicket(codeTicket string) (*models.Tickets, error) {
 	statement := `
 		SELECT t.id, t.kiosk_id, t.id_reward, t.ticket_number,
 		       t.client_phone, t.claim, t.entry_scan, t.exit_scan,
-		       r.name, r.big_win, i.url
+		       r.name, r.big_win
 		FROM tickets AS t
 		LEFT JOIN rewards AS r ON t.id_reward = r.id
-		LEFT JOIN images AS i ON r.id_images = i.id
 		WHERE t.ticket_number = ?`
 
 	db := t.db.GetDB()
@@ -203,7 +201,6 @@ func (t *TicketHandler) getTicket(codeTicket string) (*models.Tickets, error) {
 	var exitScan sql.NullTime
 	var rewardName sql.NullString
 	var bigWin sql.NullBool
-	var rewardUrl sql.NullString
 
 	err := db.QueryRow(statement, codeTicket).Scan(
 		&ticket.ID,
@@ -216,7 +213,6 @@ func (t *TicketHandler) getTicket(codeTicket string) (*models.Tickets, error) {
 		&exitScan,
 		&rewardName,
 		&bigWin,
-		&rewardUrl,
 	)
 
 	if err != nil {
@@ -227,13 +223,14 @@ func (t *TicketHandler) getTicket(codeTicket string) (*models.Tickets, error) {
 	}
 
 	if !idReward.Valid {
+		ticket.IDReward = nil
 		ticket.RewardName = nil
 		ticket.RewardBigWin = nil
-		ticket.RewardImage = nil
 	} else {
+		id := uint64(idReward.Int64)
+		ticket.IDReward = &id
 		ticket.RewardName = &rewardName.String
 		ticket.RewardBigWin = &bigWin.Bool
-		ticket.RewardImage = &rewardUrl.String
 	}
 
 	if !clientPhone.Valid {

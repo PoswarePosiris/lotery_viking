@@ -17,7 +17,6 @@ type Tickets struct {
 	ExitScan     *time.Time `db:"exit_scan" json:"exit_scan"`
 	RewardName   *string    `json:"reward_name"`
 	RewardBigWin *bool      `json:"big_win"`
-	RewardImage  *string    `json:"reward_image"`
 }
 
 func (t *Tickets) SetEntryScanNow() {

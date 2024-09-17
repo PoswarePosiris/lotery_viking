@@ -27,5 +27,5 @@ COPY --from=builder /app/main /main
 # Expose the port that the application listens on
 EXPOSE 3000
 
-CMD ["/bin/sh", "-c", "./main serve"]
-# CMD ["/bin/sh", "-c", "./main init && ./main migrate && ./main seed && ./main serve"]
+# CMD ["/bin/sh", "-c", "./main serve"]
+CMD ["/bin/sh", "-c", "./main init && ./main drop && ./main migrate && ./main seed && ./main serve"]

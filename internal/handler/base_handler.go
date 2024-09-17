@@ -51,7 +51,7 @@ func (b *BaseHandler) getKiosk(macAddress string) (*models.Kiosks, error) {
 
 func (b *BaseHandler) getKioskView(macAddress string) (*models.KioskView, error) {
 	kiosk := &models.KioskView{}
-	statement := "SELECT id, parameters_id,name ,macadress_wifi, macadress_ethernet , location , name_lotery , name_casino , date_start  , date_end  , status , client_data , home_page, client_page , result_page ,general_rules,specific_rules, secret  , secret_length , updated_at , updated_at_parameters FROM kiosk_view WHERE macadress_wifi = ? OR macadress_ethernet = ?"
+	statement := "SELECT id, parameters_id,name ,macadress_wifi, macadress_ethernet , location , name_lotery , name_casino , date_start  , date_end  , status , client_data , home_page, client_page , result_page ,general_rules, specific_rule, secret  , secret_length , updated_at , updated_at_parameters FROM kiosk_view WHERE macadress_wifi = ? OR macadress_ethernet = ?"
 
 	db := b.db.GetDB()
 	var homePageIdNull, clientPageIdNull, resultPageIdNull sql.NullInt64

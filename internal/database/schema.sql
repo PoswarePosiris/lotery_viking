@@ -20,7 +20,6 @@ CREATE TABLE `parameters` (
   `client_page` bigint unsigned DEFAULT NULL,
   `result_page` bigint unsigned DEFAULT NULL,
   `general_rules` text,
-  `specific_rules` text DEFAULT NULL,
   `secret` varchar(256) ,
   `secret_length` int,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -57,6 +56,16 @@ CREATE TABLE `publicity_images` (
   KEY `publicity_images_kiosk_id_kiosks_id_fk` (`kiosk_id`),
   KEY `publicity_images_image_id_images_id_fk` (`image_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `specific_rules` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kiosk_id` bigint unsigned DEFAULT NULL,
+  `specific_rule` text NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  KEY `specific_rules_kiosk_id_kiosks_id_fk` (`kiosk_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 CREATE TABLE `rewards` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
@@ -116,7 +125,7 @@ SELECT
     `parameters`.`status`,
     `parameters`.`client_data`,
     `parameters`.`general_rules`,
-    `parameters`.`specific_rules`,
+    `specific_rules`.`specific_rule` AS `specific_rule`,
     `parameters`.`home_page` AS `home_page`,
     `parameters`.`client_page` AS `client_page`,
     `parameters`.`result_page` AS `result_page`,
@@ -127,7 +136,7 @@ SELECT
 FROM
     `kiosks`
     LEFT JOIN `parameters` ON `parameters`.`id` = `kiosks`.`id_parameters`
-    GROUP BY `kiosks`.`id`;
+    LEFT JOIN `specific_rules` ON `specific_rules`.`kiosk_id` = `kiosks`.`id`;
 
 -- Create reward view for dl the reward in the db
 CREATE VIEW `reward_view` AS
@@ -191,3 +200,7 @@ FOREIGN KEY (`kiosk_id`) REFERENCES `kiosks` (`id`);
 ALTER TABLE `kiosks`
 ADD CONSTRAINT `kiosks_id_parameters_parameters_id_fk`
 FOREIGN KEY (`id_parameters`) REFERENCES `parameters` (`id`);
+
+ALTER TABLE `specific_rules`
+ADD CONSTRAINT `specific_rules_kiosk_id_kiosks_id_fk`
+FOREIGN KEY (`kiosk_id`) REFERENCES `kiosks` (`id`);

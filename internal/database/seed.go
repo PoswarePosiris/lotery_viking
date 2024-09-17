@@ -32,30 +32,29 @@ func Seed() error {
 
 	dataParameters := []models.Parameters{
 		{BaseModel: models.BaseModel{ID: 1},
-			NameLotery:    "Lottery 1",
-			NameCasino:    "Casino de Sanary",
-			DateStart:     "le 18 octobre 2024",
-			DateEnd:       "le 24 decembre 2024",
-			Status:        models.Scan,
-			ClientData:    false,
-			GeneralRules:  "Règles générales, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi lacus turpis, finibus id semper sit amet, gravida vitae elit. Cras nec ante odio. Nam porta, erat vitae mollis pellentesque, metus orci rutrum arcu, sed tempus est nibh convallis turpis. Nulla eget semper elit, id scelerisque dolor. Fusce lobortis ex vel maximus dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac augue at mauris finibus dapibus. Sed eu aliquet augue. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed arcu nulla, vulputate a pharetra et, lacinia eget sapien. Aliquam pellentesque quam ac lacus dapibus finibus. Maecenas lobortis tincidunt lacinia. Mauris at arcu nec arcu molestie sagittis a et lectus. Quisque luctus viverra lorem quis pretium. Nam vel metus a velit pulvinar ornare. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi rhoncus in neque ut mattis. Nulla vulputate aliquet nibh, eget venenatis lacus dapibus eu. Nam sem velit, imperdiet et erat sit amet, rhoncus laoreet dolor. Duis sodales tempor odio, ac imperdiet libero tempor et. Vivamus fermentum massa lacus, et sodales quam suscipit in. Vestibulum felis dui, facilisis id arcu pellentesque, fringilla elementum velit. Nulla iaculis gravida ligula, sed efficitur leo finibus in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam nec venenatis ligula. Nam laoreet erat ac dui sollicitudin, id mollis tellus auctor. Quisque sodales lorem at felis laoreet, in feugiat velit dapibus. Maecenas mollis egestas auctor. Nullam malesuada neque ac diam aliquam finibus. Duis condimentum tempus enim, eget cursus lectus. Duis ac bibendum est, ut egestas ante.",
-			SpecificRules: "Règles spécific, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi lacus turpis, finibus id semper sit amet, gravida vitae elit. Cras nec ante odio. Nam porta, erat vitae mollis pellentesque, metus orci rutrum arcu, sed tempus est nibh convallis turpis. Nulla eget semper elit, id scelerisque dolor. Fusce lobortis ex vel maximus dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac augue at mauris finibus dapibus. Sed eu aliquet augue. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed arcu nulla, vulputate a pharetra et, lacinia eget sapien. Aliquam pellentesque quam ac lacus dapibus finibus. Maecenas lobortis tincidunt lacinia. Mauris at arcu nec arcu molestie sagittis a et lectus. Quisque luctus viverra lorem quis pretium. Nam vel metus a velit pulvinar ornare. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi rhoncus in neque ut mattis. Nulla vulputate aliquet nibh, eget venenatis lacus dapibus eu. Nam sem velit, imperdiet et erat sit amet, rhoncus laoreet dolor. Duis sodales tempor odio, ac imperdiet libero tempor et. Vivamus fermentum massa lacus, et sodales quam suscipit in. Vestibulum felis dui, facilisis id arcu pellentesque, fringilla elementum velit. Nulla iaculis gravida ligula, sed efficitur leo finibus in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam nec venenatis ligula. Nam laoreet erat ac dui sollicitudin, id mollis tellus auctor. Quisque sodales lorem at felis laoreet, in feugiat velit dapibus. Maecenas mollis egestas auctor. Nullam malesuada neque ac diam aliquam finibus. Duis condimentum tempus enim, eget cursus lectus. Duis ac bibendum est, ut egestas ante.",
-			Secret:        "^[0-9]+$",
-			SecretLength:  10,
-			HomePageId:    1,
-			ClientPageId:  2,
-			ResultPageId:  3,
+			NameLotery:   "Lottery 1",
+			NameCasino:   "Casino de Sanary",
+			DateStart:    "le 18 octobre 2024",
+			DateEnd:      "le 24 decembre 2024",
+			Status:       models.Scan,
+			ClientData:   false,
+			GeneralRules: "Règles générales, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi lacus turpis, finibus id semper sit amet, gravida vitae elit. Cras nec ante odio. Nam porta, erat vitae mollis pellentesque, metus orci rutrum arcu, sed tempus est nibh convallis turpis. Nulla eget semper elit, id scelerisque dolor. Fusce lobortis ex vel maximus dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac augue at mauris finibus dapibus. Sed eu aliquet augue. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed arcu nulla, vulputate a pharetra et, lacinia eget sapien. Aliquam pellentesque quam ac lacus dapibus finibus. Maecenas lobortis tincidunt lacinia. Mauris at arcu nec arcu molestie sagittis a et lectus. Quisque luctus viverra lorem quis pretium. Nam vel metus a velit pulvinar ornare. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi rhoncus in neque ut mattis. Nulla vulputate aliquet nibh, eget venenatis lacus dapibus eu. Nam sem velit, imperdiet et erat sit amet, rhoncus laoreet dolor. Duis sodales tempor odio, ac imperdiet libero tempor et. Vivamus fermentum massa lacus, et sodales quam suscipit in. Vestibulum felis dui, facilisis id arcu pellentesque, fringilla elementum velit. Nulla iaculis gravida ligula, sed efficitur leo finibus in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam nec venenatis ligula. Nam laoreet erat ac dui sollicitudin, id mollis tellus auctor. Quisque sodales lorem at felis laoreet, in feugiat velit dapibus. Maecenas mollis egestas auctor. Nullam malesuada neque ac diam aliquam finibus. Duis condimentum tempus enim, eget cursus lectus. Duis ac bibendum est, ut egestas ante.",
+			Secret:       "^[0-9]+$",
+			SecretLength: 10,
+			HomePageId:   1,
+			ClientPageId: 2,
+			ResultPageId: 3,
 		},
 	}
 
-	stmtParam, err := db.Prepare("INSERT INTO parameters (id, name_lotery, name_casino,  date_start, date_end, status, general_rules, specific_rules, secret, secret_length, home_page, client_page, result_page) VALUES (?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	stmtParam, err := db.Prepare("INSERT INTO parameters (id, name_lotery, name_casino,  date_start, date_end, status, general_rules, secret, secret_length, home_page, client_page, result_page) VALUES (?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
 	defer stmtParam.Close()
 
 	for _, parameters := range dataParameters {
-		_, err = stmtParam.Exec(parameters.ID, parameters.NameLotery, parameters.NameCasino, parameters.DateStart, parameters.DateEnd, parameters.Status, parameters.GeneralRules, parameters.SpecificRules, parameters.Secret, parameters.SecretLength, parameters.HomePageId, parameters.ClientPageId, parameters.ResultPageId)
+		_, err = stmtParam.Exec(parameters.ID, parameters.NameLotery, parameters.NameCasino, parameters.DateStart, parameters.DateEnd, parameters.Status, parameters.GeneralRules, parameters.Secret, parameters.SecretLength, parameters.HomePageId, parameters.ClientPageId, parameters.ResultPageId)
 		if err != nil {
 			return err
 		}
@@ -132,6 +131,26 @@ func Seed() error {
 
 	for _, reward := range dataRewards {
 		_, err = stmtRewards.Exec(reward.ID, reward.Name, reward.BigWin, reward.IdImages)
+		if err != nil {
+			return err
+		}
+	}
+
+	dataSpecificRules := []models.SpecificRules{
+		{
+			KioskId:      1,
+			SpecificRule: "Règles générales, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi lacus turpis, finibus id semper sit amet, gravida vitae elit. Cras nec ante odio. Nam porta, erat vitae mollis pellentesque, metus orci rutrum arcu, sed tempus est nibh convallis turpis. Nulla eget semper elit, id scelerisque dolor. Fusce lobortis ex vel maximus dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac augue at mauris finibus dapibus. Sed eu aliquet augue. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed arcu nulla, vulputate a pharetra et, lacinia eget sapien. Aliquam pellentesque quam ac lacus dapibus finibus. Maecenas lobortis tincidunt lacinia. Mauris at arcu nec arcu molestie sagittis a et lectus. Quisque luctus viverra lorem quis pretium. Nam vel metus a velit pulvinar ornare. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi rhoncus in neque ut mattis. Nulla vulputate aliquet nibh, eget",
+		},
+	}
+
+	stmtSpecificRules, err := db.Prepare("INSERT INTO specific_rules (kiosk_id, specific_rule) VALUES (?, ?)")
+	if err != nil {
+		return err
+	}
+	defer stmtSpecificRules.Close()
+
+	for _, specificRules := range dataSpecificRules {
+		_, err = stmtSpecificRules.Exec(specificRules.KioskId, specificRules.SpecificRule)
 		if err != nil {
 			return err
 		}

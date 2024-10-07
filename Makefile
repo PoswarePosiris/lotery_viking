@@ -15,6 +15,12 @@ build-binary:
 	@echo "Building binary..."
 	@echo CGO_ENABLED=0 go build -o main cmd/api/main.go
 	@echo "Binary built successfully"
+
+build-windows:
+	@echo "Building binary for Windows..."
+	GOOS=windows GOARCH=amd64 go build -o main.exe cmd/api/main.go
+	@echo "Binary built successfully"
+
 # Run the application
 run:
 	@go run cmd/api/main.go serve
@@ -75,4 +81,4 @@ watch:
         fi
 
 
-.PHONY: all build build-binary run test clean watch
+.PHONY: all build build-binary build-windows run test clean watch

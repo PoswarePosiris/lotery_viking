@@ -30,29 +30,49 @@ func TestValidatePhoneNumber(t *testing.T) {
 			expected: true,
 		},
 		{
-			name:     "valid fr phone number with 01",
+			name:     "not valid fr phone number with 01",
 			phone:    "0101020304",
-			expected: true,
+			expected: false,
 		},
 		{
-			name:     "not valid fr phone number",
+			name:     "not valid phone number",
 			phone:    "1234567890",
 			expected: false,
 		},
 		{
-			name:     "not valid fr phone number with +",
+			name:     "valid phone number with +",
 			phone:    "+1234567890",
-			expected: false,
+			expected: true,
 		},
 		{
-			name:     "not valid fr phone number with 00",
+			name:     "valid phone number with 00",
 			phone:    "001234567890",
-			expected: false,
+			expected: true,
 		},
 		{
-			name:     "not valid fr phone with americain number",
+			name:     "valid phone americain number",
 			phone:    "+11234567890",
-			expected: false,
+			expected: true,
+		},
+		{
+			name:     "valid belgium phone number",
+			phone:    "0032498765432",
+			expected: true,
+		},
+		{
+			name:     "valid belgium phone number with +",
+			phone:    "+32498765432",
+			expected: true,
+		},
+		{
+			name:     "valid swiss phone number with +",
+			phone:    "+41791234567",
+			expected: true,
+		},
+		{
+			name:     "valid swiss phone number with 00",
+			phone:    "0041791234567",
+			expected: true,
 		},
 	}
 

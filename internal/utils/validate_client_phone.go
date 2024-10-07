@@ -2,10 +2,13 @@ package utils
 
 import "regexp"
 
-// Check if the phone number is valid or not
+// ValidatePhoneNumber checks if the given phone number is valid based on French and international formats.
+// Valid formats:
+// - Starts with +XX or 00XX followed by 9 to 13 digits (for international numbers)
+// - Starts with 06 or 07 followed by 8 digits (for French local numbers)
 func ValidatePhoneNumber(clientPhone string) bool {
-	// French phone number pattern: starts with +33, followed by 9 digits, or starts with 06 or 07, followed by 8 digits
-	pattern := `^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$`
+	// Pattern for French and international phone numbers
+	pattern := `^(?:0[67]\d{8})$|^(?:(?:\+|00)[1-9]\d{1,3}\d{6,12})$`
 	regex := regexp.MustCompile(pattern)
 	return regex.MatchString(clientPhone)
 }

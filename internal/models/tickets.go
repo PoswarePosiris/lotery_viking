@@ -12,6 +12,7 @@ type Tickets struct {
 	IDReward     *uint64    `db:"id_reward" json:"id_reward"`
 	TicketNumber string     `db:"ticket_number" json:"ticket_number"`
 	ClientPhone  *string    `db:"client_phone" json:"client_phone"`
+	Com          *bool      `db:"com" json:"com"`
 	Claim        bool       `db:"claim" json:"claim"`
 	EntryScan    *time.Time `db:"entry_scan" json:"entry_scan"`
 	ExitScan     *time.Time `db:"exit_scan" json:"exit_scan"`

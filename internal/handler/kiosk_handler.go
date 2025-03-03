@@ -111,7 +111,7 @@ func (k *KioskHandler) GetKioskRewards(c *gin.Context) {
 
 	db := k.db.GetDB()
 
-	statement := "SELECT reward_id, reward_name, big_win, image_id, image_name, image_format, image_url FROM reward_view WHERE kiosk_id = ? OR parameter_id = ?"
+	statement := "SELECT DISTINCT(reward_id), reward_name, big_win, image_id, image_name, image_format, image_url FROM reward_view WHERE kiosk_id = ? OR parameter_id = ?"
 	// Fetch IDs from publicity
 	rows, err := db.Query(statement, kiosk.ID, kiosk.IdParameters)
 	if err != nil {

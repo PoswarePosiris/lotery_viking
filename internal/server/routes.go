@@ -45,7 +45,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 		ticketRoutes.Use(middleware.CheckKiosk())
 
 		// routes
-		ticketRoutes.POST("/", ticketHandler.CreateTicket)
+		ticketRoutes.POST("", ticketHandler.CreateTicket)
 		ticketRoutes.GET("/:code", ticketHandler.GetTicket)
 		ticketRoutes.GET("/claim/:code", ticketHandler.ClaimTicket)
 	}
@@ -58,7 +58,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 		imageRoutes.Use(middleware.CheckAPIKey())
 
 		// routes
-		imageRoutes.GET("/", imageHandler.GetImages)
+		imageRoutes.GET("", imageHandler.GetImages)
 		imageRoutes.GET("/:id", imageHandler.GetImage)
 	}
 
@@ -69,7 +69,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 		// middleware
 		kioskRoutes.Use(middleware.CheckAPIKey())
 		// routes
-		kioskRoutes.GET("/", kioskHandler.GetKiosk)
+		kioskRoutes.GET("", kioskHandler.GetKiosk)
 		kioskRoutes.Use(middleware.CheckKiosk()).GET("/params", kioskHandler.GetKioskByMac)
 		kioskRoutes.Use(middleware.CheckKiosk()).GET("/rewards", kioskHandler.GetKioskRewards)
 	}

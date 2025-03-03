@@ -89,8 +89,8 @@ func (t *TicketHandler) CreateTicket(c *gin.Context) {
 				c.JSON(http.StatusBadRequest, gin.H{"error": "Numéro de téléphone invalide"})
 				return
 			}
-			statement = "INSERT INTO tickets (kiosk_id, ticket_number, client_phone, entry_scan) VALUES (?, ?,?,?)"
-			args = []interface{}{ticket.KioskID, ticket.TicketNumber, ticket.ClientPhone, ticket.EntryScan}
+			statement = "INSERT INTO tickets (kiosk_id, ticket_number, client_phone, com, entry_scan) VALUES (?, ?,?,?,?)"
+			args = []interface{}{ticket.KioskID, ticket.TicketNumber, ticket.ClientPhone, ticket.Com, ticket.EntryScan}
 		} else {
 			statement = "INSERT INTO tickets (kiosk_id, ticket_number, entry_scan) VALUES (?, ?, ?)"
 			args = []interface{}{ticket.KioskID, ticket.TicketNumber, ticket.EntryScan}
@@ -189,7 +189,7 @@ func (t *TicketHandler) getTicket(codeTicket string) (*models.Tickets, error) {
 	ticket := &models.Tickets{}
 	statement := `
 		SELECT t.id, t.kiosk_id, t.id_reward, t.ticket_number,
-		       t.client_phone, t.claim, t.entry_scan, t.exit_scan,
+		       t.client_phone, t.com, t.claim, t.entry_scan, t.exit_scan,
 		       r.name, r.big_win
 		FROM tickets AS t
 		LEFT JOIN rewards AS r ON t.id_reward = r.id
@@ -198,6 +198,7 @@ func (t *TicketHandler) getTicket(codeTicket string) (*models.Tickets, error) {
 	db := t.db.GetDB()
 	var idReward sql.NullInt64
 	var clientPhone sql.NullString
+	var com sql.NullBool
 	var exitScan sql.NullTime
 	var rewardName sql.NullString
 	var bigWin sql.NullBool
@@ -208,6 +209,7 @@ func (t *TicketHandler) getTicket(codeTicket string) (*models.Tickets, error) {
 		&idReward,
 		&ticket.TicketNumber,
 		&clientPhone,
+		&com,
 		&ticket.Claim,
 		&ticket.EntryScan,
 		&exitScan,
@@ -235,8 +237,10 @@ func (t *TicketHandler) getTicket(codeTicket string) (*models.Tickets, error) {
 
 	if !clientPhone.Valid {
 		ticket.ClientPhone = nil
+		ticket.Com = nil
 	} else {
 		ticket.ClientPhone = &clientPhone.String
+		ticket.Com = &com.Bool
 	}
 
 	if !exitScan.Valid {

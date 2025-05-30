@@ -27,7 +27,7 @@ func (k *KioskHandler) GetKiosk(c *gin.Context) {
 
 	db := k.db.GetDB()
 
-	rows, err := db.Query("SELECT id , name , macadress_wifi, macadress_ethernet , location , id_parameters , created_at, updated_at FROM kiosks")
+	rows, err := db.Query("SELECT id , name , macadress_wifi, macadress_ethernet , location , id_parameter , id_casino, created_at, updated_at FROM kiosks")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -36,7 +36,7 @@ func (k *KioskHandler) GetKiosk(c *gin.Context) {
 
 	for rows.Next() {
 		var kiosk models.Kiosks
-		err := rows.Scan(&kiosk.ID, &kiosk.Name, &kiosk.MacadressWifi, &kiosk.MacadressEthernet, &kiosk.Location, &kiosk.IdParameters, &kiosk.CreatedAt, &kiosk.UpdatedAt)
+		err := rows.Scan(&kiosk.ID, &kiosk.Name, &kiosk.MacadressWifi, &kiosk.MacadressEthernet, &kiosk.Location, &kiosk.IdParameters, &kiosk.IdCasino, &kiosk.CreatedAt, &kiosk.UpdatedAt)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -111,9 +111,9 @@ func (k *KioskHandler) GetKioskRewards(c *gin.Context) {
 
 	db := k.db.GetDB()
 
-	statement := "SELECT DISTINCT(reward_id), reward_name, big_win, image_id, image_name, image_format, image_url FROM reward_view WHERE kiosk_id = ? OR parameter_id = ?"
+	statement := "SELECT DISTINCT(reward_id), reward_name, big_win, image_id, image_name, image_format, image_url FROM reward_view WHERE casino_id = ? OR id_parameter = ?"
 	// Fetch IDs from publicity
-	rows, err := db.Query(statement, kiosk.ID, kiosk.IdParameters)
+	rows, err := db.Query(statement, kiosk.IdCasino, kiosk.IdParameters)
 	if err != nil {
 		log.Println("Error fetching rewards ", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch rewards"})
@@ -222,14 +222,14 @@ func assignPublicityImages(kiosk *models.KioskView, imagesMap map[uint64]models.
 }
 
 // getPublicityImageIds fetches IDs from the publicity
-func (k *KioskHandler) getPublicityImageIds(kioksId uint64, parametersId uint64) ([]uint64, error) {
+func (k *KioskHandler) getPublicityImageIds(kioskId uint64, parametersId uint64) ([]uint64, error) {
 	var ids []uint64
 
 	db := k.db.GetDB()
 
-	statement := "SELECT image_id FROM publicity_images WHERE kiosk_id = ? OR parameter_id = ?"
+	statement := "SELECT image_id FROM publicity_images WHERE kiosk_id = ? OR id_parameter = ?"
 	// Fetch IDs from publicity
-	rows, err := db.Query(statement, kioksId, parametersId)
+	rows, err := db.Query(statement, kioskId, parametersId)
 	if err != nil {
 		return nil, err
 	}

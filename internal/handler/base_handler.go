@@ -39,7 +39,7 @@ func (b *BaseHandler) getKioskId(macAddress string) (uint64, error) {
 
 func (b *BaseHandler) getKiosk(macAddress string) (*models.Kiosks, error) {
 	kiosk := &models.Kiosks{}
-	statement := "SELECT id , name , macadress_wifi, macadress_ethernet , location , id_parameters , created_at, updated_at FROM kiosks WHERE macadress_wifi = ? OR macadress_ethernet = ?"
+	statement := "SELECT id , name , macadress_wifi, macadress_ethernet , location , id_parameter , created_at, updated_at FROM kiosks WHERE macadress_wifi = ? OR macadress_ethernet = ?"
 
 	db := b.db.GetDB()
 	err := db.QueryRow(statement, macAddress, macAddress).Scan(&kiosk.ID, &kiosk.Name, &kiosk.MacadressWifi, &kiosk.MacadressEthernet, &kiosk.Location, &kiosk.IdParameters, &kiosk.CreatedAt, &kiosk.UpdatedAt)
@@ -51,12 +51,12 @@ func (b *BaseHandler) getKiosk(macAddress string) (*models.Kiosks, error) {
 
 func (b *BaseHandler) getKioskView(macAddress string) (*models.KioskView, error) {
 	kiosk := &models.KioskView{}
-	statement := "SELECT id, parameters_id,name ,macadress_wifi, macadress_ethernet , location , name_lotery , name_casino , date_start  , date_end  , status , client_data , home_page, client_page , result_page ,general_rules, specific_rule, secret  , secret_length , updated_at , updated_at_parameters FROM kiosk_view WHERE macadress_wifi = ? OR macadress_ethernet = ?"
+	statement := "SELECT id, id_parameter,id_casino, name ,macadress_wifi, macadress_ethernet , location , lotery_name , casino_name , casino_location, date_start  , date_end  , status , client_data , home_page, client_page , result_page ,general_rules, specific_rule, secret  , secret_length , updated_at , updated_at_parameters FROM kiosk_view WHERE macadress_wifi = ? OR macadress_ethernet = ?"
 
 	db := b.db.GetDB()
 	var homePageIdNull, clientPageIdNull, resultPageIdNull sql.NullInt64
 	var specificRulesNull sql.NullString
-	err := db.QueryRow(statement, macAddress, macAddress).Scan(&kiosk.ID, &kiosk.ParametersID, &kiosk.Name, &kiosk.MacadressWifi, &kiosk.MacadressEthernet, &kiosk.Location, &kiosk.NameLotery, &kiosk.NameCasino, &kiosk.DateStart, &kiosk.DateEnd, &kiosk.Status, &kiosk.ClientData, &homePageIdNull, &clientPageIdNull, &resultPageIdNull, &kiosk.GeneralRules, &specificRulesNull, &kiosk.Secret, &kiosk.SecretLength, &kiosk.UpdatedAt, &kiosk.UpdatedAtParameters)
+	err := db.QueryRow(statement, macAddress, macAddress).Scan(&kiosk.ID, &kiosk.ParametersID, &kiosk.IDCasino, &kiosk.Name, &kiosk.MacadressWifi, &kiosk.MacadressEthernet, &kiosk.Location, &kiosk.LoteryName, &kiosk.CasinoName, &kiosk.CasinoLocation, &kiosk.DateStart, &kiosk.DateEnd, &kiosk.Status, &kiosk.ClientData, &homePageIdNull, &clientPageIdNull, &resultPageIdNull, &kiosk.GeneralRules, &specificRulesNull, &kiosk.Secret, &kiosk.SecretLength, &kiosk.UpdatedAt, &kiosk.UpdatedAtParameters)
 	if err != nil {
 		return nil, err
 	}

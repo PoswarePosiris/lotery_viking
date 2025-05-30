@@ -10,7 +10,6 @@ const (
 type Parameters struct {
 	BaseModel
 	NameLotery   string  `db:"name_lotery" json:"name_lotery"`
-	NameCasino   string  `db:"name_casino" json:"name_casino"`
 	DateStart    string  `db:"date_start" json:"date_start"`
 	DateEnd      string  `db:"date_end" json:"date_end"`
 	Status       Status  `db:"status" json:"status"`

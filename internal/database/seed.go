@@ -10,11 +10,11 @@ func Seed() error {
 	defer db.Close()
 
 	dataImages := []models.Images{
-		{BaseModel: models.BaseModel{ID: 1}, Name: "Image 1", Url: stringPtr("https://picsum.photos/id/10/200/300"), Format: "jpg"},
-		{BaseModel: models.BaseModel{ID: 2}, Name: "Image 2", Url: stringPtr("https://picsum.photos/id/25/200/300"), Format: "png"},
-		{BaseModel: models.BaseModel{ID: 3}, Name: "Image 3", Url: stringPtr("https://picsum.photos/id/50/200/300"), Format: "jpg"},
-		{BaseModel: models.BaseModel{ID: 4}, Name: "Image 4 pub", Url: stringPtr("https://picsum.photos/100/1/200/300"), Format: "png"},
-		{BaseModel: models.BaseModel{ID: 5}, Name: "Image 5 pub", Url: nil, Format: "jpg"},
+		{BaseModel: models.BaseModel{ID: 1}, Name: "Image_1", Url: stringPtr("https://picsum.photos/id/10/200/300"), Format: "jpg"},
+		{BaseModel: models.BaseModel{ID: 2}, Name: "Image_2", Url: stringPtr("https://picsum.photos/id/25/200/300"), Format: "png"},
+		{BaseModel: models.BaseModel{ID: 3}, Name: "Image_3", Url: stringPtr("https://picsum.photos/id/50/200/300"), Format: "jpg"},
+		{BaseModel: models.BaseModel{ID: 4}, Name: "Image_4_pub", Url: stringPtr("https://picsum.photos/100/1/200/300"), Format: "png"},
+		{BaseModel: models.BaseModel{ID: 5}, Name: "Image_5_pub", Url: nil, Format: "jpg"},
 	}
 
 	stmtImage, err := db.Prepare("INSERT INTO images (id, name, url, format) VALUES (?, ?, ?, ?)")
@@ -33,7 +33,6 @@ func Seed() error {
 	dataParameters := []models.Parameters{
 		{BaseModel: models.BaseModel{ID: 1},
 			NameLotery:   "Lottery 1",
-			NameCasino:   "Casino de Sanary",
 			DateStart:    "le 18 octobre 2024",
 			DateEnd:      "le 24 decembre 2024",
 			Status:       models.Scan,
@@ -47,14 +46,14 @@ func Seed() error {
 		},
 	}
 
-	stmtParam, err := db.Prepare("INSERT INTO parameters (id, name_lotery, name_casino,  date_start, date_end, status, general_rules, secret, secret_length, home_page, client_page, result_page) VALUES (?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?)")
+	stmtParam, err := db.Prepare("INSERT INTO parameters (id, lotery_name, date_start, date_end, status, general_rules, secret, secret_length, home_page, client_page, result_page) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
 	defer stmtParam.Close()
 
 	for _, parameters := range dataParameters {
-		_, err = stmtParam.Exec(parameters.ID, parameters.NameLotery, parameters.NameCasino, parameters.DateStart, parameters.DateEnd, parameters.Status, parameters.GeneralRules, parameters.Secret, parameters.SecretLength, parameters.HomePageId, parameters.ClientPageId, parameters.ResultPageId)
+		_, err = stmtParam.Exec(parameters.ID, parameters.NameLotery, parameters.DateStart, parameters.DateEnd, parameters.Status, parameters.GeneralRules, parameters.Secret, parameters.SecretLength, parameters.HomePageId, parameters.ClientPageId, parameters.ResultPageId)
 		if err != nil {
 			return err
 		}
@@ -71,7 +70,7 @@ func Seed() error {
 		},
 	}
 
-	stmtPublicity, err := db.Prepare("INSERT INTO publicity_images (parameter_id, image_id) VALUES (?, ?)")
+	stmtPublicity, err := db.Prepare("INSERT INTO publicity_images (id_parameter, image_id) VALUES (?, ?)")
 	if err != nil {
 		return err
 	}
@@ -84,25 +83,62 @@ func Seed() error {
 		}
 	}
 
+	// add casino
+	dataCasinos := []models.Casinos{
+		{
+			BaseModel: models.BaseModel{ID: 1},
+			Name:      "Casino 1",
+			Location:  "Rouen",
+		},
+		{
+			BaseModel: models.BaseModel{ID: 2},
+			Name:      "Casino 2",
+			Location:  "Paris",
+		},
+	}
+
+	stmtCasinos, err := db.Prepare("INSERT INTO casinos (id, name, location) VALUES (?, ?, ?)")
+	if err != nil {
+		return err
+	}
+	defer stmtCasinos.Close()
+
+	for _, casino := range dataCasinos {
+		_, err = stmtCasinos.Exec(casino.ID, casino.Name, casino.Location)
+		if err != nil {
+			return err
+		}
+	}
+
 	dataKiosks := []models.Kiosks{
 		{
 			BaseModel:         models.BaseModel{ID: 1},
-			Name:              "Kiosk Posware",
+			Name:              "Kiosk 1",
 			Location:          "Rouen",
 			MacadressWifi:     "7C:0A:3F:F5:2A:CA",
 			MacadressEthernet: "D8:A3:5C:E6:97:6A",
 			IdParameters:      1,
+			IdCasino:          1,
+		},
+		{
+			BaseModel:         models.BaseModel{ID: 2},
+			Name:              "Kiosk 2",
+			Location:          "Paris",
+			MacadressWifi:     "7C:0A:3F:F5:2A:CB",
+			MacadressEthernet: "D8:A3:5C:E6:97:6B",
+			IdParameters:      1,
+			IdCasino:          2,
 		},
 	}
 
-	stmtKiosks, err := db.Prepare("INSERT INTO kiosks (id, name, macadress_wifi, macadress_ethernet, location, id_parameters) VALUES (?,?, ?, ?, ?, ?)")
+	stmtKiosks, err := db.Prepare("INSERT INTO kiosks (id, name, macadress_wifi, macadress_ethernet, location, id_parameter, id_casino) VALUES (?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
 	defer stmtKiosks.Close()
 
 	for _, kiosks := range dataKiosks {
-		_, err = stmtKiosks.Exec(kiosks.ID, kiosks.Name, kiosks.MacadressWifi, kiosks.MacadressEthernet, kiosks.Location, kiosks.IdParameters)
+		_, err = stmtKiosks.Exec(kiosks.ID, kiosks.Name, kiosks.MacadressWifi, kiosks.MacadressEthernet, kiosks.Location, kiosks.IdParameters, kiosks.IdCasino)
 		if err != nil {
 			return err
 		}
@@ -110,16 +146,20 @@ func Seed() error {
 
 	dataRewards := []models.Rewards{
 		{
-			BaseModel: models.BaseModel{ID: 1},
-			Name:      "Reward 1",
-			BigWin:    true,
-			IdImages:  1,
+			BaseModel:    models.BaseModel{ID: 1},
+			Name:         "Reward 1",
+			BigWin:       true,
+			IdImages:     1,
+			IdCasino:     nil,
+			IdParameters: 1,
 		},
 		{
-			BaseModel: models.BaseModel{ID: 2},
-			Name:      "Reward 2",
-			BigWin:    false,
-			IdImages:  2,
+			BaseModel:    models.BaseModel{ID: 2},
+			Name:         "Reward 2",
+			BigWin:       false,
+			IdImages:     2,
+			IdCasino:     nil,
+			IdParameters: 1,
 		},
 	}
 
@@ -138,19 +178,19 @@ func Seed() error {
 
 	dataSpecificRules := []models.SpecificRules{
 		{
-			KioskId:      1,
+			CasinoID:     1,
 			SpecificRule: "Règles générales, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi lacus turpis, finibus id semper sit amet, gravida vitae elit. Cras nec ante odio. Nam porta, erat vitae mollis pellentesque, metus orci rutrum arcu, sed tempus est nibh convallis turpis. Nulla eget semper elit, id scelerisque dolor. Fusce lobortis ex vel maximus dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac augue at mauris finibus dapibus. Sed eu aliquet augue. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed arcu nulla, vulputate a pharetra et, lacinia eget sapien. Aliquam pellentesque quam ac lacus dapibus finibus. Maecenas lobortis tincidunt lacinia. Mauris at arcu nec arcu molestie sagittis a et lectus. Quisque luctus viverra lorem quis pretium. Nam vel metus a velit pulvinar ornare. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi rhoncus in neque ut mattis. Nulla vulputate aliquet nibh, eget",
 		},
 	}
 
-	stmtSpecificRules, err := db.Prepare("INSERT INTO specific_rules (kiosk_id, specific_rule) VALUES (?, ?)")
+	stmtSpecificRules, err := db.Prepare("INSERT INTO specific_rules (id_casino, specific_rule) VALUES (?, ?)")
 	if err != nil {
 		return err
 	}
 	defer stmtSpecificRules.Close()
 
 	for _, specificRules := range dataSpecificRules {
-		_, err = stmtSpecificRules.Exec(specificRules.KioskId, specificRules.SpecificRule)
+		_, err = stmtSpecificRules.Exec(specificRules.CasinoID, specificRules.SpecificRule)
 		if err != nil {
 			return err
 		}
@@ -158,25 +198,25 @@ func Seed() error {
 
 	dataTicketsWin := []models.Tickets{
 		{
-			KioskID:      1,
+			CasinoID:     1,
 			IDReward:     newUint64(1),
 			TicketNumber: "1000000000",
 		},
 		{
-			KioskID:      1,
+			CasinoID:     1,
 			IDReward:     newUint64(2),
 			TicketNumber: "1000000001",
 		},
 	}
 
-	stmtTicketsWin, err := db.Prepare("INSERT INTO tickets (kiosk_id, id_reward, ticket_number) VALUES (?, ?, ?)")
+	stmtTicketsWin, err := db.Prepare("INSERT INTO tickets (id_casino, id_reward, ticket_number) VALUES (?, ?, ?)")
 	if err != nil {
 		return err
 	}
 	defer stmtTicketsWin.Close()
 
 	for _, ticket := range dataTicketsWin {
-		_, err = stmtTicketsWin.Exec(ticket.KioskID, ticket.IDReward, ticket.TicketNumber)
+		_, err = stmtTicketsWin.Exec(ticket.CasinoID, ticket.IDReward, ticket.TicketNumber)
 		if err != nil {
 			return err
 		}
@@ -184,23 +224,23 @@ func Seed() error {
 
 	dataTicketsLoose := []models.Tickets{
 		{
-			KioskID:      1,
+			CasinoID:     1,
 			TicketNumber: "1000000002",
 		},
 		{
-			KioskID:      1,
+			CasinoID:     1,
 			TicketNumber: "1000000003",
 		},
 	}
 
-	stmtTickets, err := db.Prepare("INSERT INTO tickets (kiosk_id,  ticket_number) VALUES (?, ?)")
+	stmtTickets, err := db.Prepare("INSERT INTO tickets (id_casino,  ticket_number) VALUES (?, ?)")
 	if err != nil {
 		return err
 	}
 	defer stmtTickets.Close()
 
 	for _, ticket := range dataTicketsLoose {
-		_, err = stmtTickets.Exec(ticket.KioskID, ticket.TicketNumber)
+		_, err = stmtTickets.Exec(ticket.CasinoID, ticket.TicketNumber)
 		if err != nil {
 			return err
 		}

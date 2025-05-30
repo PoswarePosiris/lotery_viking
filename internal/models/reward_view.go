@@ -8,6 +8,6 @@ type RewardView struct {
 	ImageName   *string `db:"image_name" json:"image_name"`
 	ImageFormat *string `db:"image_format" json:"image_format"`
 	ImageUrl    *string `db:"image_url" json:"image_url"`
-	KioskID     uint64  `db:"kiosk_id" json:"-"`
-	ParameterID uint64  `db:"parameter_id" json:"-"`
+	CasinoID    *uint64 `db:"casino_id" json:"-"`
+	ParameterID uint64  `db:"id_parameter" json:"-"`
 }

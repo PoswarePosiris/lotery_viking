@@ -7,12 +7,11 @@ import (
 
 type Tickets struct {
 	BaseModel
-	KioskID      uint64     `db:"kiosk_id" json:"kiosk_id"`
-	Kiosk        *Kiosks    `json:"kiosk,omitempty"`
+	CasinoID     uint64     `db:"id_casino" json:"id_casino"`
+	Casino       *Casinos   `json:"casino,omitempty"`
 	IDReward     *uint64    `db:"id_reward" json:"id_reward"`
 	TicketNumber string     `db:"ticket_number" json:"ticket_number"`
 	ClientPhone  *string    `db:"client_phone" json:"client_phone"`
-	Com          *bool      `db:"com" json:"com"`
 	Claim        bool       `db:"claim" json:"claim"`
 	EntryScan    *time.Time `db:"entry_scan" json:"entry_scan"`
 	ExitScan     *time.Time `db:"exit_scan" json:"exit_scan"`

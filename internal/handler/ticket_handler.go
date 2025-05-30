@@ -24,6 +24,7 @@ const (
 	TicketCreated      = "Ticket ajouté"
 	TicketClaimMsg     = "Ticket réclamé"
 	KioskNotFound      = "Kiosk non trouvé"
+	WrongCasino        = "Mauvais casino"
 )
 
 func NewTicketHandler(db database.Service) *TicketHandler {
@@ -61,7 +62,7 @@ func (t *TicketHandler) CreateTicket(c *gin.Context) {
 		return
 	}
 	clientData := kiosk.ClientData
-	ticket.KioskID = kiosk.ID
+	ticket.CasinoID = kiosk.IDCasino
 	// check if the format of the ticket number is correct
 	//
 	if !ticket.IsValid(kiosk.Secret, kiosk.SecretLength) {
@@ -82,18 +83,18 @@ func (t *TicketHandler) CreateTicket(c *gin.Context) {
 		db := t.db.GetDB()
 
 		var statement string
-		var args []interface{}
+		var args []any
 
 		if clientData {
 			if !ticket.IsValidClientPhone() {
 				c.JSON(http.StatusBadRequest, gin.H{"error": "Numéro de téléphone invalide"})
 				return
 			}
-			statement = "INSERT INTO tickets (kiosk_id, ticket_number, client_phone, com, entry_scan) VALUES (?, ?,?,?,?)"
-			args = []interface{}{ticket.KioskID, ticket.TicketNumber, ticket.ClientPhone, ticket.Com, ticket.EntryScan}
+			statement = "INSERT INTO tickets (id_casino, ticket_number, client_phone, entry_scan) VALUES (?, ?,?,?,?)"
+			args = []any{ticket.CasinoID, ticket.TicketNumber, ticket.ClientPhone, ticket.EntryScan}
 		} else {
-			statement = "INSERT INTO tickets (kiosk_id, ticket_number, entry_scan) VALUES (?, ?, ?)"
-			args = []interface{}{ticket.KioskID, ticket.TicketNumber, ticket.EntryScan}
+			statement = "INSERT INTO tickets (id_casino, ticket_number, entry_scan) VALUES (?, ?, ?)"
+			args = []any{ticket.CasinoID, ticket.TicketNumber, ticket.EntryScan}
 		}
 
 		_, err = db.Exec(statement, args...)
@@ -127,6 +128,11 @@ func (t *TicketHandler) ClaimTicket(c *gin.Context) {
 	ticket, err := t.getTicket(code)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": TicketNotFound})
+		return
+	}
+
+	if ticket.CasinoID != kiosk.IDCasino {
+		c.JSON(http.StatusForbidden, gin.H{"error": WrongCasino})
 		return
 	}
 
@@ -182,14 +188,19 @@ func (t *TicketHandler) GetTicket(c *gin.Context) {
 		return
 	}
 
+	if ticket.CasinoID != kiosk.IDCasino {
+		c.JSON(http.StatusForbidden, gin.H{"error": WrongCasino})
+		return
+	}
+
 	c.JSON(http.StatusOK, ticket)
 }
 
 func (t *TicketHandler) getTicket(codeTicket string) (*models.Tickets, error) {
 	ticket := &models.Tickets{}
 	statement := `
-		SELECT t.id, t.kiosk_id, t.id_reward, t.ticket_number,
-		       t.client_phone, t.com, t.claim, t.entry_scan, t.exit_scan,
+		SELECT t.id, t.id_casino, t.id_reward, t.ticket_number,
+		       t.client_phone, t.claim, t.entry_scan, t.exit_scan,
 		       r.name, r.big_win
 		FROM tickets AS t
 		LEFT JOIN rewards AS r ON t.id_reward = r.id
@@ -198,18 +209,16 @@ func (t *TicketHandler) getTicket(codeTicket string) (*models.Tickets, error) {
 	db := t.db.GetDB()
 	var idReward sql.NullInt64
 	var clientPhone sql.NullString
-	var com sql.NullBool
 	var exitScan sql.NullTime
 	var rewardName sql.NullString
 	var bigWin sql.NullBool
 
 	err := db.QueryRow(statement, codeTicket).Scan(
 		&ticket.ID,
-		&ticket.KioskID,
+		&ticket.CasinoID,
 		&idReward,
 		&ticket.TicketNumber,
 		&clientPhone,
-		&com,
 		&ticket.Claim,
 		&ticket.EntryScan,
 		&exitScan,
@@ -237,10 +246,8 @@ func (t *TicketHandler) getTicket(codeTicket string) (*models.Tickets, error) {
 
 	if !clientPhone.Valid {
 		ticket.ClientPhone = nil
-		ticket.Com = nil
 	} else {
 		ticket.ClientPhone = &clientPhone.String
-		ticket.Com = &com.Bool
 	}
 
 	if !exitScan.Valid {
